@@ -1,1126 +1,631 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="dark scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Synthex AI - 10-in-1 AI Content Creation Studio</title>
+    <title>Prof. Nathan | CNM Cybersecurity & AI Activities Hub</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
-                        mono: ['Fira Code', 'monospace']
+                        mono: ['JetBrains Mono', 'monospace'],
                     },
                     colors: {
-                        brand: {
-                            50: '#f0f3ff',
-                            100: '#e1e7fe',
-                            500: '#6366f1',
-                            600: '#4f46e5',
-                            700: '#4338ca',
-                            900: '#1e1b4b',
-                            accent: '#a855f7',
-                            pink: '#ec4899',
-                            emerald: '#10b981'
+                        cnm: {
+                            blue: '#003B71',
+                            gold: '#FFC72C',
+                            darkBlue: '#00264A'
                         },
-                        dark: {
-                            bg: '#070a12',
-                            card: '#0f172a',
-                            border: '#1e293b'
+                        cyber: {
+                            bg: '#0a0e17',
+                            card: '#111827',
+                            border: '#1f293d',
+                            green: '#10b981',
+                            neon: '#00ff9d',
+                            cyan: '#06b6d4',
+                            purple: '#a855f7',
+                            amber: '#f59e0b',
+                            rose: '#f43f5e'
                         }
                     },
                     animation: {
-                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-glow': 'pulseGlow 3s infinite ease-in-out',
+                        'scanline': 'scanline 8s linear infinite',
                     },
                     keyframes: {
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0px)' },
-                            '50%': { transform: 'translateY(-10px)' },
+                        pulseGlow: {
+                            '0%, 100%': { opacity: '0.4' },
+                            '50%': { opacity: '0.8' },
+                        },
+                        scanline: {
+                            '0%': { transform: 'translateY(-100%)' },
+                            '100%': { transform: 'translateY(1000%)' },
                         }
                     }
                 }
             }
         }
     </script>
-    
+
     <style>
         body {
-            background-color: #070a12;
-            color: #f3f4f6;
+            background-color: #080c14;
+            color: #e2e8f0;
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
         }
-        .glow-purple {
-            box-shadow: 0 0 50px -10px rgba(168, 85, 247, 0.3);
+        .cyber-grid-bg {
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
         }
-        .glass-card {
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(16px);
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.75);
+            backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
-        .glass-card:hover {
-            border-color: rgba(168, 85, 247, 0.4);
+        .glass-panel:hover {
+            border-color: rgba(6, 182, 212, 0.4);
         }
-        .glass-pill {
-            background: rgba(30, 41, 59, 0.6);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .cyber-glow-cyan {
+            box-shadow: 0 0 25px -5px rgba(6, 182, 212, 0.3);
         }
-        .text-gradient {
-            background: linear-gradient(135deg, #a855f7 0%, #6366f1 50%, #ec4899 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .bg-gradient-btn {
-            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-        }
-        .bg-gradient-btn:hover {
-            background: linear-gradient(135deg, #4f46e5 0%, #9333ea 100%);
+        .cyber-glow-green {
+            box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.3);
         }
         ::-webkit-scrollbar {
             width: 8px;
-            height: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #070a12;
+            background: #080c14;
         }
         ::-webkit-scrollbar-thumb {
             background: #1e293b;
             border-radius: 4px;
         }
-        .activity-tab-active {
-            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-            color: #ffffff !important;
-            border-color: rgba(255,255,255,0.3) !important;
-            box-shadow: 0 4px 15px -3px rgba(99, 102, 241, 0.4);
+        ::-webkit-scrollbar-thumb:hover {
+            background: #06b6d4;
         }
     </style>
 </head>
-<body class="antialiased selection:bg-brand-500 selection:text-white">
+<body class="cyber-grid-bg min-h-screen flex flex-col justify-between selection:bg-cyber-cyan selection:text-black">
 
-    <div class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-full pointer-events-none z-0 overflow-hidden">
-        <div class="absolute top-[-100px] left-[10%] w-[500px] h-[500px] bg-brand-500/15 rounded-full blur-[140px] animate-pulse-slow"></div>
-        <div class="absolute top-[20%] right-[5%] w-[450px] h-[450px] bg-brand-accent/15 rounded-full blur-[140px]"></div>
-        <div class="absolute top-[60%] left-[15%] w-[600px] h-[600px] bg-brand-pink/10 rounded-full blur-[160px]"></div>
-    </div>
-
-    <nav class="sticky top-0 z-50 backdrop-blur-xl bg-dark-bg/80 border-b border-dark-border/80">
+    <header class="sticky top-0 z-50 glass-panel border-b border-cyber-border/80">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <!-- Brand Logo -->
-            <a href="#" class="flex items-center gap-3 group">
-                <div class="w-10 h-10 rounded-xl bg-gradient-btn flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-brand-500/30 group-hover:scale-105 transition-transform">
-                    <i class="fa-solid fa-wand-magic-sparkles text-lg"></i>
-                </div>
-                <span class="text-xl font-extrabold tracking-tight text-white">Synthex<span class="text-brand-accent">.ai</span></span>
-            </a>
-
-            <!-- Desktop Nav Links -->
-            <div class="hidden lg:flex items-center gap-8 text-sm font-medium text-slate-300">
-                <a href="#activities-hub" class="hover:text-white transition-colors flex items-center gap-1.5">
-                    <i class="fa-solid fa-shapes text-brand-accent text-xs"></i> 10 AI Tools Hub
-                </a>
-                <a href="#activities-showcase" class="hover:text-white transition-colors">All Capabilities</a>
-                <a href="#code-inspector-section" class="hover:text-white transition-colors flex items-center gap-1 text-emerald-400">
-                    <i class="fa-solid fa-code text-xs"></i> JS Code Inspector
-                </a>
-                <a href="#pricing" class="hover:text-white transition-colors">Pricing</a>
-                <a href="#faq" class="hover:text-white transition-colors">FAQ</a>
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="hidden lg:flex items-center gap-4">
-                <a href="#activities-hub" class="text-sm font-semibold text-slate-300 hover:text-white px-4 py-2 transition-colors">Sign In</a>
-                <a href="#activities-hub" class="bg-gradient-btn text-white text-sm font-semibold px-5 py-2.5 rounded-xl shadow-lg shadow-brand-500/25 hover:shadow-brand-500/40 transition-all hover:-translate-y-0.5 flex items-center gap-2">
-                    <i class="fa-solid fa-bolt text-amber-300"></i> Launch Studio
-                </a>
-            </div>
-
-            <!-- Mobile Menu Toggle Button -->
-            <button id="mobile-menu-btn" class="lg:hidden text-slate-300 hover:text-white p-2 focus:outline-none" aria-label="Toggle Navigation">
-                <i class="fa-solid fa-bars text-2xl"></i>
-            </button>
-        </div>
-
-        <!-- Mobile Drawer -->
-        <div id="mobile-menu" class="hidden lg:hidden border-b border-dark-border bg-dark-card/95 backdrop-blur-2xl px-4 pt-2 pb-6 space-y-4">
-            <a href="#activities-hub" class="block py-2 text-slate-300 hover:text-white font-medium"><i class="fa-solid fa-shapes text-brand-accent mr-2"></i>10 AI Activities</a>
-            <a href="#activities-showcase" class="block py-2 text-slate-300 hover:text-white font-medium">All Capabilities</a>
-            <a href="#code-inspector-section" class="block py-2 text-emerald-400 font-medium"><i class="fa-solid fa-code mr-2"></i>JS Code Inspector</a>
-            <a href="#pricing" class="block py-2 text-slate-300 hover:text-white font-medium">Pricing</a>
-            <a href="#faq" class="block py-2 text-slate-300 hover:text-white font-medium">FAQ</a>
-            <div class="pt-4 border-t border-slate-800 flex flex-col gap-3">
-                <a href="#activities-hub" class="w-full text-center py-2.5 text-slate-300 hover:text-white font-semibold rounded-xl border border-slate-700">Sign In</a>
-                <a href="#activities-hub" class="w-full text-center py-2.5 bg-gradient-btn text-white font-semibold rounded-xl shadow-lg shadow-brand-500/30">Start Free Trial</a>
-            </div>
-        </div>
-    </nav>
-
-    <section class="relative z-10 pt-16 pb-20 lg:pt-24 lg:pb-28">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             
-            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card border border-brand-500/30 text-xs sm:text-sm text-slate-300 mb-8 animate-float">
-                <span class="flex h-2 w-2 rounded-full bg-brand-accent animate-ping"></span>
-                <span class="font-bold text-brand-accent">Web Dev Class Project:</span>
-                <span>10 Interactive Embedded JS Activities in One Page</span>
-                <i class="fa-solid fa-chevron-right text-xs opacity-70"></i>
-            </div>
-
-            <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto leading-[1.12]">
-                One AI Studio. <span class="text-gradient">10 High-Impact Content Activities</span> Built in Embedded JS
-            </h1>
-
-            <p class="mt-6 text-lg sm:text-xl text-slate-400 max-w-3xl mx-auto font-normal leading-relaxed">
-                Learn how web applications structure modular content tools. Try our 10 embedded JavaScript AI engines for SEO articles, viral threads, cold emails, ad copy, and visuals below!
-            </p>
-
-            <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto">
-                <a href="#activities-hub" class="w-full sm:w-auto px-8 py-4 bg-gradient-btn text-white font-bold rounded-xl shadow-xl shadow-brand-500/30 hover:shadow-brand-500/50 hover:scale-105 transition-all flex items-center justify-center gap-3 group">
-                    <span>Try All 10 Interactive Tools</span>
-                    <i class="fa-solid fa-arrow-right text-sm group-hover:translate-x-1 transition-transform"></i>
-                </a>
-                <a href="#code-inspector-section" class="w-full sm:w-auto px-8 py-4 glass-card text-emerald-400 font-semibold rounded-xl hover:bg-slate-800/80 transition-all flex items-center justify-center gap-2 border border-emerald-500/30">
-                    <i class="fa-solid fa-code"></i>
-                    <span>Inspect JS Engine Code</span>
-                </a>
-            </div>
-
-            <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-                <div class="glass-pill rounded-2xl p-4 text-center">
-                    <p class="text-2xl sm:text-3xl font-extrabold text-white">10-in-1</p>
-                    <p class="text-xs text-slate-400 mt-1 uppercase tracking-wider font-semibold">Embedded JS Tools</p>
+            <!-- Brand & Institution Tag -->
+            <div class="flex items-center gap-4">
+                <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-cyan-500/20">
+                    <i class="fa-solid fa-shield-halved"></i>
                 </div>
-                <div class="glass-pill rounded-2xl p-4 text-center">
-                    <p class="text-2xl sm:text-3xl font-extrabold text-brand-accent">Gemini 3</p>
-                    <p class="text-xs text-slate-400 mt-1 uppercase tracking-wider font-semibold">LLM Engine API</p>
-                </div>
-                <div class="glass-pill rounded-2xl p-4 text-center">
-                    <p class="text-2xl sm:text-3xl font-extrabold text-emerald-400">100%</p>
-                    <p class="text-xs text-slate-400 mt-1 uppercase tracking-wider font-semibold">Single File HTML/JS</p>
-                </div>
-                <div class="glass-pill rounded-2xl p-4 text-center">
-                    <p class="text-2xl sm:text-3xl font-extrabold text-brand-pink">Zero</p>
-                    <p class="text-xs text-slate-400 mt-1 uppercase tracking-wider font-semibold">External Frameworks</p>
-                </div>
-            </div>
-
-        </div>
-    </section>
-
-    <section id="activities-hub" class="py-20 relative z-10 bg-dark-card/40 border-y border-dark-border">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            
-            <div class="text-center mb-12">
-                <span class="text-brand-accent text-xs sm:text-sm font-extrabold uppercase tracking-widest px-3 py-1 rounded-full bg-brand-accent/10 border border-brand-accent/20">Live Interactive Workspace</span>
-                <h2 class="text-3xl sm:text-5xl font-extrabold text-white mt-3">Select an AI Activity Below & Execute</h2>
-                <p class="mt-3 text-slate-400 max-w-2xl mx-auto text-base sm:text-lg">Experience our 10 purpose-built embedded JS activities in real-time.</p>
-            </div>
-
-            <!-- 10 Activities Navigation Bar / Tabs -->
-            <div class="mb-8 overflow-x-auto pb-4">
-                <div id="activity-tabs-container" class="flex gap-2.5 min-w-max p-1.5 glass-card rounded-2xl border border-slate-800">
-                    <button class="activity-tab activity-tab-active px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-slate-300 hover:text-white transition-all flex items-center gap-2 border border-transparent" data-activity="1">
-                        <i class="fa-solid fa-newspaper text-brand-accent"></i> 1. Blog Post
-                    </button>
-                    <button class="activity-tab px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-slate-300 hover:text-white transition-all flex items-center gap-2 border border-transparent" data-activity="2">
-                        <i class="fa-brands fa-x-twitter text-sky-400"></i> 2. Viral Thread
-                    </button>
-                    <button class="activity-tab px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-slate-300 hover:text-white transition-all flex items-center gap-2 border border-transparent" data-activity="3">
-                        <i class="fa-solid fa-envelope text-indigo-400"></i> 3. Cold Email
-                    </button>
-                    <button class="activity-tab px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-slate-300 hover:text-white transition-all flex items-center gap-2 border border-transparent" data-activity="4">
-                        <i class="fa-solid fa-bullhorn text-pink-400"></i> 4. Ad Copywriter
-                    </button>
-                    <button class="activity-tab px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-slate-300 hover:text-white transition-all flex items-center gap-2 border border-transparent" data-activity="5">
-                        <i class="fa-brands fa-linkedin text-blue-500"></i> 5. LinkedIn Leader
-                    </button>
-                    <button class="activity-tab px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-slate-300 hover:text-white transition-all flex items-center gap-2 border border-transparent" data-activity="6">
-                        <i class="fa-solid fa-magnifying-glass text-emerald-400"></i> 6. SEO Meta Tags
-                    </button>
-                    <button class="activity-tab px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-slate-300 hover:text-white transition-all flex items-center gap-2 border border-transparent" data-activity="7">
-                        <i class="fa-brands fa-youtube text-red-500"></i> 7. YouTube Script
-                    </button>
-                    <button class="activity-tab px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-slate-300 hover:text-white transition-all flex items-center gap-2 border border-transparent" data-activity="8">
-                        <i class="fa-solid fa-bag-shopping text-amber-400"></i> 8. Product Copy
-                    </button>
-                    <button class="activity-tab px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-slate-300 hover:text-white transition-all flex items-center gap-2 border border-transparent" data-activity="9">
-                        <i class="fa-solid fa-file-contract text-purple-400"></i> 9. Press Release
-                    </button>
-                    <button class="activity-tab px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-slate-300 hover:text-white transition-all flex items-center gap-2 border border-transparent" data-activity="10">
-                        <i class="fa-solid fa-paintbrush text-brand-pink"></i> 10. AI Image Prompt
-                    </button>
-                </div>
-            </div>
-
-            <!-- Studio Canvas Container -->
-            <div class="glass-card rounded-2xl p-6 lg:p-8 shadow-2xl border border-slate-700/60 max-w-6xl mx-auto relative overflow-hidden">
-                
-                <!-- Activity Header Banner -->
-                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-6 mb-6 border-b border-slate-800 gap-4">
-                    <div class="flex items-center gap-3">
-                        <div id="activity-badge-icon" class="w-12 h-12 rounded-xl bg-brand-500/20 text-brand-accent flex items-center justify-center text-xl shrink-0">
-                            <i class="fa-solid fa-newspaper"></i>
-                        </div>
-                        <div>
-                            <div class="flex items-center gap-2">
-                                <span class="text-xs uppercase tracking-widest text-slate-400 font-bold">Activity #<span id="activity-num-display">1</span></span>
-                                <span id="activity-category-badge" class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-brand-500/20 text-brand-accent">Long-Form Writing</span>
-                            </div>
-                            <h3 id="activity-title-display" class="text-xl font-bold text-white">Full Blog Article & Outline Generator</h3>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-2 text-xs font-semibold text-slate-400 bg-slate-900/80 px-3 py-1.5 rounded-lg border border-slate-800">
-                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                        <span>Engine: <span class="text-white font-mono">Gemini 3 Flash API</span></span>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                    
-                    <!-- Left: Control Panel Input Form -->
-                    <div class="lg:col-span-5 flex flex-col justify-between gap-4">
-                        
-                        <!-- Primary Prompt Field -->
-                        <div>
-                            <label id="prompt-label" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Topic or Keyword Focus</label>
-                            <textarea id="prompt-input" rows="3" class="w-full bg-slate-950/90 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all resize-none">10 productivity hacks for remote software engineering teams in 2026</textarea>
-                        </div>
-
-                        <!-- Secondary Input Field -->
-                        <div>
-                            <label id="secondary-label" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Target Audience / Details</label>
-                            <input id="secondary-input" type="text" class="w-full bg-slate-950/90 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500 transition-all" value="Engineering Directors, Tech Leads & Remote Developers">
-                        </div>
-
-                        <!-- Grid Options: Tone & Word Count -->
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Tone of Voice</label>
-                                <select id="tone-select" class="w-full bg-slate-950/90 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-brand-500 transition-all">
-                                    <option value="Authoritative, Professional & Engaging">Authoritative & Engaging</option>
-                                    <option value="Casual, Conversational & Witty">Casual & Witty</option>
-                                    <option value="Direct Response High-Converting Sales">High-Converting Sales</option>
-                                    <option value="Academic, Data-Driven & Precise">Data-Driven & Technical</option>
-                                    <option value="Inspirational & Visionary">Inspirational</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Word Length</label>
-                                <select id="length-select" class="w-full bg-slate-950/90 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-brand-500 transition-all">
-                                    <option value="Short (~300 words)">Short (~300 words)</option>
-                                    <option value="Medium (~600 words)" selected>Medium (~600 words)</option>
-                                    <option value="Comprehensive (~1,000+ words)">Comprehensive (1,000+)</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <!-- Creativity Slider -->
-                        <div>
-                            <div class="flex justify-between items-center mb-1">
-                                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400">AI Creativity Level</label>
-                                <span id="creativity-val" class="text-xs font-bold text-brand-accent bg-slate-800 px-2 py-0.5 rounded">Balanced (3.5)</span>
-                            </div>
-                            <input id="creativity-slider" type="range" min="1" max="5" value="4" class="w-full accent-brand-500 bg-slate-800 rounded-lg h-2 cursor-pointer">
-                        </div>
-
-                        <!-- Run Activity Action Button -->
-                        <button id="run-activity-btn" class="w-full py-4 px-6 bg-gradient-btn text-white font-bold rounded-xl shadow-lg shadow-brand-500/25 hover:shadow-brand-500/40 transition-all flex items-center justify-center gap-3 mt-2 group">
-                            <i class="fa-solid fa-bolt text-amber-300 group-hover:scale-125 transition-transform"></i>
-                            <span id="run-btn-text" class="text-sm">Execute Activity #1</span>
-                        </button>
-                    </div>
-
-                    <!-- Right: Live Output Viewport -->
-                    <div class="lg:col-span-7 flex flex-col h-full min-h-[380px]">
-                        <!-- Output Toolbar Header -->
-                        <div class="flex items-center justify-between bg-slate-900/90 px-4 py-3 rounded-t-xl border border-slate-800">
-                            <div class="flex items-center gap-2 text-xs font-semibold text-slate-300">
-                                <i class="fa-solid fa-terminal text-brand-accent"></i>
-                                <span id="output-status-text">Studio Viewport</span>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <button id="copy-text-btn" class="text-xs font-semibold text-slate-400 hover:text-white flex items-center gap-1.5 transition-colors bg-slate-800/80 hover:bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700">
-                                    <i class="fa-regular fa-copy"></i> Copy
-                                </button>
-                                <button id="download-text-btn" class="text-xs font-semibold text-slate-400 hover:text-white flex items-center gap-1.5 transition-colors bg-slate-800/80 hover:bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700">
-                                    <i class="fa-solid fa-download"></i> Save
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Output Content Area -->
-                        <div id="output-container" class="flex-1 bg-slate-950/95 border-x border-b border-slate-800 rounded-b-xl p-5 text-sm text-slate-200 leading-relaxed font-mono whitespace-pre-wrap overflow-y-auto max-h-[420px] relative">
-<span class="text-slate-500">Select any activity from the bar above, adjust your prompt, and click "Execute Activity" to view live generated output...</span>
-                        </div>
-
-                        <!-- Output Metrics Bar -->
-                        <div class="flex items-center justify-between text-[11px] text-slate-500 mt-2 px-1">
-                            <div class="flex items-center gap-4">
-                                <span>Words: <strong id="metric-word-count" class="text-slate-300">0</strong></span>
-                                <span>Chars: <strong id="metric-char-count" class="text-slate-300">0</strong></span>
-                            </div>
-                            <div>
-                                <span>Est. Read Time: <strong id="metric-read-time" class="text-slate-300">0 min</strong></span>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <section id="code-inspector-section" class="py-20 relative z-10 bg-slate-950/80 border-b border-slate-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-12">
-                <span class="text-emerald-400 text-xs sm:text-sm font-extrabold uppercase tracking-widest px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">Web Developer Learning Panel</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-3">Inspect the Embedded JavaScript Logic</h2>
-                <p class="mt-3 text-slate-400 text-sm sm:text-base">Click any activity below to view how its system prompt, parameters, and async fetch call are structured in clean JavaScript!</p>
-            </div>
-
-            <div class="glass-card rounded-2xl border border-slate-800 p-6 max-w-5xl mx-auto">
-                <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-800">
+                <div>
                     <div class="flex items-center gap-2">
-                        <span class="w-3 h-3 rounded-full bg-rose-500"></span>
-                        <span class="w-3 h-3 rounded-full bg-amber-500"></span>
-                        <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
-                        <span class="ml-2 text-xs font-mono text-slate-400">activity_engine.js</span>
+                        <span class="text-xs font-bold uppercase tracking-wider text-cnm-gold bg-cnm-blue px-2 py-0.5 rounded border border-yellow-500/30">CNM College</span>
+                        <span class="text-xs font-mono text-cyan-400">Cybersecurity Dept</span>
                     </div>
-                    <div class="flex gap-2" id="inspector-tabs">
-                        <button class="inspector-btn active bg-slate-800 text-emerald-400 border-emerald-500/50 text-xs font-mono px-3 py-1 rounded border" data-act="1">Activity #1 Code</button>
-                        <button class="inspector-btn bg-slate-900 text-slate-400 border-slate-800 text-xs font-mono px-3 py-1 rounded border hover:text-white" data-act="2">Activity #2 Code</button>
-                        <button class="inspector-btn bg-slate-900 text-slate-400 border-slate-800 text-xs font-mono px-3 py-1 rounded border hover:text-white" data-act="3">Activity #3 Code</button>
-                    </div>
+                    <h1 class="text-lg font-extrabold tracking-tight text-white flex items-center gap-2">
+                        Prof. Nathan's AI Lab Hub
+                    </h1>
                 </div>
+            </div>
 
-                <div class="mt-4 bg-slate-950 p-4 rounded-xl overflow-x-auto border border-slate-900 font-mono text-xs text-slate-300 leading-relaxed">
-                    <pre><code id="inspector-code-block">// Select Activity #1 to inspect system instruction configuration:
-const activityConfig = {
-    id: 1,
-    title: "Full Blog Article & Outline Generator",
-    systemPrompt: "You are an expert SEO blog author. Write a detailed, engaging blog post...",
-    async execute(promptVal, secondaryVal) {
-        const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent", {
-            method: "POST",
-            body: JSON.stringify({ contents: [{ parts: [{ text: promptVal }] }] })
-        });
-        return response.json();
-    }
-};</code></pre>
+            <!-- Header Quick Stats & Navigation Links -->
+            <div class="hidden md:flex items-center gap-6">
+                <div class="text-right">
+                    <p class="text-xs text-slate-400 uppercase tracking-widest font-mono">Completed Labs</p>
+                    <p class="text-sm font-bold font-mono text-cyber-neon" id="header-progress-count">0 / 10</p>
                 </div>
+                <div class="w-24 h-2 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
+                    <div id="header-progress-bar" class="h-full bg-gradient-to-r from-cyan-500 to-emerald-400 transition-all duration-500 w-0"></div>
+                </div>
+                <a href="#activities" class="px-4 py-2 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 rounded-xl text-xs font-semibold font-mono transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-list-check"></i> 10 Activities
+                </a>
+            </div>
+
+            <!-- Mobile Progress Indicator -->
+            <div class="md:hidden flex items-center gap-3">
+                <span class="text-xs font-mono text-cyan-400 font-bold" id="mobile-progress-text">0/10 Labs</span>
             </div>
         </div>
-    </section>
+    </header>
 
-    <section id="activities-showcase" class="py-24 relative z-10">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-16">
-                <span class="text-brand-pink text-sm font-extrabold uppercase tracking-widest px-3 py-1 rounded-full bg-brand-pink/10 border border-brand-pink/20">The Complete AI Toolkit</span>
-                <h2 class="text-3xl sm:text-5xl font-extrabold text-white mt-3">10 Specialized Activities Built for Results</h2>
-                <p class="mt-4 text-slate-400 text-base sm:text-lg">Click on any card below to automatically load that activity directly into the live studio canvas.</p>
+    <main class="flex-grow">
+        <section class="relative py-12 lg:py-16 overflow-hidden border-b border-cyber-border">
+            
+            <!-- Glow background spheres -->
+            <div class="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none"></div>
+            <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-[120px] pointer-events-none"></div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                    
+                    <!-- Left: Hero Text & Information -->
+                    <div class="lg:col-span-7 space-y-6">
+                        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-panel border border-cyan-500/30 text-xs font-mono text-cyan-300">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span>Central New Mexico Community College</span>
+                            <span class="text-slate-500">|</span>
+                            <span>Coursework Portal</span>
+                        </div>
+
+                        <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
+                            Hands-On <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-emerald-400 to-purple-400">AI & Cybersecurity</span> Lab Series
+                        </h2>
+
+                        <p class="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl">
+                            Welcome! I’m <strong>Nathan</strong>, Cybersecurity Instructor at Central New Mexico Community College. This portal hosts 10 interactive, embedded AI activities designed to bridge artificial intelligence with defensive cyber ops, threat hunting, policy generation, and vulnerability analysis.
+                        </p>
+
+                        <!-- Call to Action Buttons -->
+                        <div class="flex flex-wrap items-center gap-4 pt-2">
+                            <a href="#activities" class="px-6 py-3.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold rounded-xl shadow-lg shadow-cyan-500/25 transition-all hover:scale-[1.02] flex items-center gap-2 text-sm">
+                                <i class="fa-solid fa-rocket"></i> Launch Activities
+                            </a>
+                            <button onclick="toggleTerminalModal()" class="px-6 py-3.5 glass-panel text-slate-300 hover:text-white font-mono text-xs rounded-xl border border-slate-700 hover:border-cyan-500/50 transition-all flex items-center gap-2">
+                                <i class="fa-solid fa-terminal text-cyan-400"></i> Open Terminal Matrix
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Right: Instructor Bio Card & Stats -->
+                    <div class="lg:col-span-5">
+                        <div class="glass-panel rounded-2xl p-6 border border-slate-800 space-y-5 relative cyber-glow-cyan">
+                            <div class="flex items-center gap-4">
+                                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-cnm-blue to-cyan-700 flex items-center justify-center text-3xl text-cnm-gold font-bold border border-yellow-500/40">
+                                    <i class="fa-solid fa-user-shield"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-bold text-white">Instructor Nathan</h3>
+                                    <p class="text-xs text-cyan-400 font-mono">Cybersecurity Faculty @ CNM</p>
+                                    <p class="text-xs text-slate-400 mt-1"><i class="fa-solid fa-location-dot text-rose-400 mr-1"></i>Albuquerque, New Mexico</p>
+                                </div>
+                            </div>
+
+                            <hr class="border-slate-800">
+
+                            <!-- Lab Quick Rules / Focus Areas -->
+                            <div class="grid grid-cols-2 gap-3 text-xs font-mono">
+                                <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+                                    <span class="text-slate-400 block text-[10px]">TOTAL ACTIVITIES</span>
+                                    <span class="text-white font-bold text-base text-cyan-400">10 Labs</span>
+                                </div>
+                                <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+                                    <span class="text-slate-400 block text-[10px]">FILE FORMAT</span>
+                                    <span class="text-emerald-400 font-bold text-base">activy01-10.html</span>
+                                </div>
+                                <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+                                    <span class="text-slate-400 block text-[10px]">DIFFICULTY</span>
+                                    <span class="text-amber-400 font-bold text-base">Beginner to Adv</span>
+                                </div>
+                                <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+                                    <span class="text-slate-400 block text-[10px]">PREREQUISITES</span>
+                                    <span class="text-purple-400 font-bold text-base">Basic Cyber / AI</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section id="activities" class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- Section Title & Filter Tools -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+                <div>
+                    <div class="flex items-center gap-2 text-xs font-mono text-cyan-400 uppercase tracking-widest">
+                        <i class="fa-solid fa-folder-open"></i>
+                        <span>Centralized Coursework Repository</span>
+                    </div>
+                    <h3 class="text-2xl sm:text-3xl font-extrabold text-white mt-1">10 Cybersecurity AI Activities</h3>
+                    <p class="text-slate-400 text-xs sm:text-sm mt-1">Click any card to launch the embedded HTML activity (`activy01.html` through `activy10.html`).</p>
+                </div>
+
+                <!-- Search and Category Filters -->
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                    <div class="relative min-w-[240px]">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+                        <input type="text" id="activity-search" placeholder="Search lab activities..." class="w-full bg-slate-900/90 border border-slate-700 focus:border-cyan-500 rounded-xl pl-9 pr-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none transition-all">
+                    </div>
+
+                    <!-- Category Dropdown -->
+                    <select id="category-filter" class="bg-slate-900/90 border border-slate-700 text-slate-300 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:border-cyan-500">
+                        <option value="all">All Categories</option>
+                        <option value="defensive">Defensive Security</option>
+                        <option value="threat">Threat Hunting & Intelligence</option>
+                        <option value="governance">Policy & Compliance</option>
+                        <option value="offensive">Social Engineering & Attack Vector</option>
+                    </select>
+                </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                
-                <!-- Activity Card 1 -->
-                <div class="glass-card rounded-2xl p-6 flex flex-col justify-between hover:-translate-y-1 transition-all duration-300 cursor-pointer group" onclick="switchAndScrollToActivity(1)">
-                    <div>
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="w-10 h-10 rounded-xl bg-brand-500/20 text-brand-accent flex items-center justify-center text-lg font-bold">
-                                <i class="fa-solid fa-newspaper"></i>
-                            </div>
-                            <span class="text-xs font-bold text-slate-500 bg-slate-900 px-2.5 py-1 rounded-full border border-slate-800">Activity #01</span>
-                        </div>
-                        <h3 class="text-lg font-bold text-white group-hover:text-brand-accent transition-colors">Blog Post & Outline Engine</h3>
-                        <p class="text-slate-400 text-xs mt-2 leading-relaxed">
-                            Generate comprehensive long-form articles, structured headings (H2/H3), takeaways, and key highlights with high SEO potential.
-                        </p>
-                    </div>
-                    <div class="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between text-xs font-semibold text-brand-accent">
-                        <span>Launch Activity #1</span>
-                        <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
-                    </div>
+            <!-- Activity Grid Container -->
+            <div id="activities-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Activities will be dynamicly rendered via JavaScript -->
+            </div>
+
+        </section>
+
+        <section class="py-12 bg-slate-950/60 border-t border-cyber-border">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-8">
+                    <h3 class="text-xl font-bold text-white">Frequently Asked Questions</h3>
+                    <p class="text-xs text-slate-400 mt-1">Information for CNM students and cybersecurity learners.</p>
                 </div>
 
-                <!-- Activity Card 2 -->
-                <div class="glass-card rounded-2xl p-6 flex flex-col justify-between hover:-translate-y-1 transition-all duration-300 cursor-pointer group" onclick="switchAndScrollToActivity(2)">
-                    <div>
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="w-10 h-10 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center text-lg font-bold">
-                                <i class="fa-brands fa-x-twitter"></i>
-                            </div>
-                            <span class="text-xs font-bold text-slate-500 bg-slate-900 px-2.5 py-1 rounded-full border border-slate-800">Activity #02</span>
+                <div class="space-y-4">
+                    <div class="glass-panel rounded-xl border border-slate-800 overflow-hidden">
+                        <button onclick="toggleFaq('faq-1')" class="w-full px-6 py-4 text-left font-bold text-sm text-white flex items-center justify-between focus:outline-none">
+                            <span>How do these 10 HTML activities work?</span>
+                            <i id="faq-1-icon" class="fa-solid fa-chevron-down text-cyan-400 text-xs transition-transform"></i>
+                        </button>
+                        <div id="faq-1" class="hidden px-6 pb-4 text-xs text-slate-400 leading-relaxed border-t border-slate-800/50 pt-3">
+                            Each activity is stored in a dedicated HTML file (`activy01.html`, `activy02.html`, ..., `activy10.html`). They run complete embedded HTML5, CSS3, and JavaScript logic directly in your browser without requiring external server setup.
                         </div>
-                        <h3 class="text-lg font-bold text-white group-hover:text-sky-400 transition-colors">Viral X / Tweet Thread Writer</h3>
-                        <p class="text-slate-400 text-xs mt-2 leading-relaxed">
-                            Craft viral Twitter/X hook tweets and multi-part educational threads designed for maximum retweets and bookmarks.
-                        </p>
                     </div>
-                    <div class="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between text-xs font-semibold text-sky-400">
-                        <span>Launch Activity #2</span>
-                        <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+
+                    <div class="glass-panel rounded-xl border border-slate-800 overflow-hidden">
+                        <button onclick="toggleFaq('faq-2')" class="w-full px-6 py-4 text-left font-bold text-sm text-white flex items-center justify-between focus:outline-none">
+                            <span>How is student progress saved?</span>
+                            <i id="faq-2-icon" class="fa-solid fa-chevron-down text-cyan-400 text-xs transition-transform"></i>
+                        </button>
+                        <div id="faq-2" class="hidden px-6 pb-4 text-xs text-slate-400 leading-relaxed border-t border-slate-800/50 pt-3">
+                            Your progress is stored locally in your browser's LocalStorage. When you complete or mark an activity done, this landing page tracks your completion status out of 10.
+                        </div>
                     </div>
                 </div>
+            </div>
+        </section>
+    </main>
 
-                <!-- Activity Card 3 -->
-                <div class="glass-card rounded-2xl p-6 flex flex-col justify-between hover:-translate-y-1 transition-all duration-300 cursor-pointer group" onclick="switchAndScrollToActivity(3)">
-                    <div>
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="w-10 h-10 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-lg font-bold">
-                                <i class="fa-solid fa-envelope"></i>
-                            </div>
-                            <span class="text-xs font-bold text-slate-500 bg-slate-900 px-2.5 py-1 rounded-full border border-slate-800">Activity #03</span>
-                        </div>
-                        <h3 class="text-lg font-bold text-white group-hover:text-indigo-400 transition-colors">High-Response Cold Email</h3>
-                        <p class="text-slate-400 text-xs mt-2 leading-relaxed">
-                            Draft high-converting outbound sales sequences, catchy subject lines, value props, and frictionless calls to action.
-                        </p>
-                    </div>
-                    <div class="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between text-xs font-semibold text-indigo-400">
-                        <span>Launch Activity #3</span>
-                        <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
-                    </div>
+    <div id="terminal-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="glass-panel rounded-2xl border border-cyan-500/40 w-full max-w-2xl overflow-hidden shadow-2xl">
+            <!-- Terminal Header -->
+            <div class="bg-slate-900 px-4 py-3 border-b border-slate-800 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full bg-rose-500"></span>
+                    <span class="w-3 h-3 rounded-full bg-amber-500"></span>
+                    <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+                    <span class="ml-2 font-mono text-xs text-slate-400">nathan@cnm-cyber-lab:~</span>
                 </div>
+                <button onclick="toggleTerminalModal()" class="text-slate-400 hover:text-white text-xs font-mono">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
 
-                <!-- Activity Card 4 -->
-                <div class="glass-card rounded-2xl p-6 flex flex-col justify-between hover:-translate-y-1 transition-all duration-300 cursor-pointer group" onclick="switchAndScrollToActivity(4)">
-                    <div>
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="w-10 h-10 rounded-xl bg-pink-500/20 text-pink-400 flex items-center justify-center text-lg font-bold">
-                                <i class="fa-solid fa-bullhorn"></i>
-                            </div>
-                            <span class="text-xs font-bold text-slate-500 bg-slate-900 px-2.5 py-1 rounded-full border border-slate-800">Activity #04</span>
-                        </div>
-                        <h3 class="text-lg font-bold text-white group-hover:text-pink-400 transition-colors">Meta & Paid Ad Copywriter</h3>
-                        <p class="text-slate-400 text-xs mt-2 leading-relaxed">
-                            Generate scroll-stopping Facebook, Instagram, and Google ad headlines, primary texts, and call-to-actions (AIDA/PAS formulas).
-                        </p>
-                    </div>
-                    <div class="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between text-xs font-semibold text-pink-400">
-                        <span>Launch Activity #4</span>
-                        <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
-                    </div>
-                </div>
+            <!-- Terminal Screen -->
+            <div class="p-4 bg-slate-950 font-mono text-xs h-80 overflow-y-auto space-y-2 text-slate-300" id="terminal-output">
+                <p class="text-emerald-400">Welcome to CNM Cybersecurity & AI Terminal [Version 2.026]</p>
+                <p class="text-slate-400">Type <span class="text-cyan-300 font-bold">help</span> to list available commands or <span class="text-cyan-300 font-bold">list</span> to view all 10 activities.</p>
+                <br>
+            </div>
 
-                <!-- Activity Card 5 -->
-                <div class="glass-card rounded-2xl p-6 flex flex-col justify-between hover:-translate-y-1 transition-all duration-300 cursor-pointer group" onclick="switchAndScrollToActivity(5)">
-                    <div>
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="w-10 h-10 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center text-lg font-bold">
-                                <i class="fa-brands fa-linkedin"></i>
-                            </div>
-                            <span class="text-xs font-bold text-slate-500 bg-slate-900 px-2.5 py-1 rounded-full border border-slate-800">Activity #05</span>
-                        </div>
-                        <h3 class="text-lg font-bold text-white group-hover:text-blue-400 transition-colors">LinkedIn Thought Leadership</h3>
-                        <p class="text-slate-400 text-xs mt-2 leading-relaxed">
-                            Publish professional, engaging story-driven LinkedIn posts that position you or your brand as an industry authority.
-                        </p>
-                    </div>
-                    <div class="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between text-xs font-semibold text-blue-400">
-                        <span>Launch Activity #5</span>
-                        <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
-                    </div>
-                </div>
-
-                <!-- Activity Card 6 -->
-                <div class="glass-card rounded-2xl p-6 flex flex-col justify-between hover:-translate-y-1 transition-all duration-300 cursor-pointer group" onclick="switchAndScrollToActivity(6)">
-                    <div>
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-lg font-bold">
-                                <i class="fa-solid fa-magnifying-glass"></i>
-                            </div>
-                            <span class="text-xs font-bold text-slate-500 bg-slate-900 px-2.5 py-1 rounded-full border border-slate-800">Activity #06</span>
-                        </div>
-                        <h3 class="text-lg font-bold text-white group-hover:text-emerald-400 transition-colors">SEO Meta Tags & Keywords</h3>
-                        <p class="text-slate-400 text-xs mt-2 leading-relaxed">
-                            Generate high-click-through meta titles, descriptions, focus keyword lists, and search intent guidelines for Google ranking.
-                        </p>
-                    </div>
-                    <div class="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between text-xs font-semibold text-emerald-400">
-                        <span>Launch Activity #6</span>
-                        <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
-                    </div>
-                </div>
-
-                <!-- Activity Card 7 -->
-                <div class="glass-card rounded-2xl p-6 flex flex-col justify-between hover:-translate-y-1 transition-all duration-300 cursor-pointer group" onclick="switchAndScrollToActivity(7)">
-                    <div>
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="w-10 h-10 rounded-xl bg-red-500/20 text-red-400 flex items-center justify-center text-lg font-bold">
-                                <i class="fa-brands fa-youtube"></i>
-                            </div>
-                            <span class="text-xs font-bold text-slate-500 bg-slate-900 px-2.5 py-1 rounded-full border border-slate-800">Activity #07</span>
-                        </div>
-                        <h3 class="text-lg font-bold text-white group-hover:text-red-400 transition-colors">YouTube Video Script Outline</h3>
-                        <p class="text-slate-400 text-xs mt-2 leading-relaxed">
-                            Structure high-retention video scripts with video hooks, main timestamps, visual cues, and compelling closing CTA scripts.
-                        </p>
-                    </div>
-                    <div class="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between text-xs font-semibold text-red-400">
-                        <span>Launch Activity #7</span>
-                        <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
-                    </div>
-                </div>
-
-                <!-- Activity Card 8 -->
-                <div class="glass-card rounded-2xl p-6 flex flex-col justify-between hover:-translate-y-1 transition-all duration-300 cursor-pointer group" onclick="switchAndScrollToActivity(8)">
-                    <div>
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-lg font-bold">
-                                <i class="fa-solid fa-bag-shopping"></i>
-                            </div>
-                            <span class="text-xs font-bold text-slate-500 bg-slate-900 px-2.5 py-1 rounded-full border border-slate-800">Activity #08</span>
-                        </div>
-                        <h3 class="text-lg font-bold text-white group-hover:text-amber-400 transition-colors">Product Feature & Sales Copy</h3>
-                        <p class="text-slate-400 text-xs mt-2 leading-relaxed">
-                            Transform product features into emotional benefit statements, bullet points, and Amazon/Shopify sales listings.
-                        </p>
-                    </div>
-                    <div class="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between text-xs font-semibold text-amber-400">
-                        <span>Launch Activity #8</span>
-                        <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
-                    </div>
-                </div>
-
-                <!-- Activity Card 9 -->
-                <div class="glass-card rounded-2xl p-6 flex flex-col justify-between hover:-translate-y-1 transition-all duration-300 cursor-pointer group" onclick="switchAndScrollToActivity(9)">
-                    <div>
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-lg font-bold">
-                                <i class="fa-solid fa-file-contract"></i>
-                            </div>
-                            <span class="text-xs font-bold text-slate-500 bg-slate-900 px-2.5 py-1 rounded-full border border-slate-800">Activity #09</span>
-                        </div>
-                        <h3 class="text-lg font-bold text-white group-hover:text-purple-400 transition-colors">PR & Press Release Writer</h3>
-                        <p class="text-slate-400 text-xs mt-2 leading-relaxed">
-                            Draft official media announcements, product launches, funding press releases, and executive quote templates.
-                        </p>
-                    </div>
-                    <div class="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between text-xs font-semibold text-purple-400">
-                        <span>Launch Activity #9</span>
-                        <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
-                    </div>
-                </div>
-
-                <!-- Activity Card 10 -->
-                <div class="glass-card md:col-span-2 lg:col-span-3 rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 hover:border-brand-pink/50 transition-all border border-brand-pink/30 cursor-pointer group" onclick="switchAndScrollToActivity(10)">
-                    <div class="space-y-2">
-                        <div class="flex items-center gap-2">
-                            <div class="w-8 h-8 rounded-lg bg-brand-pink/20 text-brand-pink flex items-center justify-center text-sm font-bold">
-                                <i class="fa-solid fa-paintbrush"></i>
-                            </div>
-                            <span class="text-xs font-bold text-brand-pink bg-brand-pink/10 px-2.5 py-0.5 rounded-full border border-brand-pink/20">Activity #10 - Visual Art AI</span>
-                        </div>
-                        <h3 class="text-xl font-bold text-white group-hover:text-brand-pink transition-colors">AI Graphic & Image Prompt Studio</h3>
-                        <p class="text-slate-400 text-sm max-w-2xl leading-relaxed">
-                            Generate engineered prompts for Imagen 4, Midjourney, or DALL-E, or render visual concept graphics live directly inside our studio.
-                        </p>
-                    </div>
-                    <button class="px-6 py-3 bg-gradient-to-r from-brand-pink to-brand-accent text-white font-bold text-sm rounded-xl shadow-lg shadow-brand-pink/25 hover:shadow-brand-pink/40 transition-all shrink-0 flex items-center gap-2">
-                        <span>Launch Visual Studio</span>
-                        <i class="fa-solid fa-arrow-right"></i>
-                    </button>
-                </div>
-
+            <!-- Terminal Input -->
+            <div class="bg-slate-900 px-4 py-3 border-t border-slate-800 flex items-center gap-2">
+                <span class="text-cyan-400 font-mono text-xs font-bold">$</span>
+                <input type="text" id="terminal-input" placeholder="Enter command..." class="bg-transparent border-none text-xs font-mono text-white focus:outline-none w-full placeholder-slate-600" onkeydown="handleTerminalCommand(event)">
             </div>
         </div>
-    </section>
-
-    <section id="pricing" class="py-24 relative z-10 bg-dark-card/30 border-t border-dark-border">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-16">
-                <span class="text-brand-accent text-xs sm:text-sm font-extrabold uppercase tracking-widest px-3 py-1 rounded-full bg-brand-accent/10 border border-brand-accent/20">Simple Pricing</span>
-                <h2 class="text-3xl sm:text-5xl font-extrabold text-white mt-3">Access All 10 AI Activities Today</h2>
-                <p class="mt-4 text-slate-400 text-base sm:text-lg">No per-tool addon fees. Get full access to all 10 activities with every plan.</p>
-            </div>
-
-            <!-- Pricing Cards Grid -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
-                <div class="glass-card rounded-2xl p-8 flex flex-col justify-between border border-slate-800">
-                    <div>
-                        <h3 class="text-xl font-bold text-white">Creator Starter</h3>
-                        <p class="text-slate-400 text-xs mt-1">Perfect for solo founders & creators.</p>
-                        <div class="mt-6 flex items-baseline gap-1">
-                            <span class="text-4xl font-extrabold text-white">$29</span>
-                            <span class="text-slate-400 text-sm">/ month</span>
-                        </div>
-                        <ul class="mt-8 space-y-4 text-sm text-slate-300">
-                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-accent"></i> Access to <strong>All 10 AI Activities</strong></li>
-                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-accent"></i> 50,000 AI Words / month</li>
-                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-accent"></i> Standard Gemini 3 Speed</li>
-                        </ul>
-                    </div>
-                    <a href="#activities-hub" class="mt-8 w-full py-3 bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm rounded-xl text-center transition-all border border-slate-700 block">Get Started Free</a>
-                </div>
-
-                <div class="glass-card rounded-2xl p-8 flex flex-col justify-between border-2 border-brand-500 relative glow-purple">
-                    <div>
-                        <h3 class="text-xl font-bold text-white">Pro Growth Studio</h3>
-                        <p class="text-slate-400 text-xs mt-1">Ideal for marketing teams & agencies.</p>
-                        <div class="mt-6 flex items-baseline gap-1">
-                            <span class="text-5xl font-extrabold text-white">$79</span>
-                            <span class="text-slate-400 text-sm">/ month</span>
-                        </div>
-                        <ul class="mt-8 space-y-4 text-sm text-slate-300">
-                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-accent"></i> Access to <strong>All 10 AI Activities</strong></li>
-                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-accent"></i> <strong>Unlimited AI Words</strong></li>
-                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-accent"></i> Custom Brand Voice Trainer</li>
-                        </ul>
-                    </div>
-                    <a href="#activities-hub" class="mt-8 w-full py-3.5 bg-gradient-btn text-white font-bold text-sm rounded-xl text-center transition-all shadow-lg shadow-brand-500/30 block">Start 14-Day Free Trial</a>
-                </div>
-
-                <div class="glass-card rounded-2xl p-8 flex flex-col justify-between border border-slate-800">
-                    <div>
-                        <h3 class="text-xl font-bold text-white">Enterprise Scale</h3>
-                        <p class="text-slate-400 text-xs mt-1">For organizations requiring custom LLMs.</p>
-                        <div class="mt-6 flex items-baseline gap-1">
-                            <span class="text-4xl font-extrabold text-white">$249</span>
-                            <span class="text-slate-400 text-sm">/ month</span>
-                        </div>
-                        <ul class="mt-8 space-y-4 text-sm text-slate-300">
-                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-accent"></i> Everything in Pro Plan</li>
-                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-accent"></i> API Key Integration for 10 Activities</li>
-                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-accent"></i> Fine-Tuned Proprietary AI Models</li>
-                        </ul>
-                    </div>
-                    <a href="#activities-hub" class="mt-8 w-full py-3 bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm rounded-xl text-center transition-all border border-slate-700 block">Contact Sales</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- FAQ Section -->
-    <section id="faq" class="py-20 relative z-10">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-extrabold text-white">Frequently Asked Questions</h2>
-            </div>
-            <div class="space-y-4">
-                <div class="glass-card rounded-xl border border-slate-800 overflow-hidden">
-                    <button class="faq-toggle w-full px-6 py-5 text-left text-white font-bold flex items-center justify-between focus:outline-none">
-                        <span>How are the 10 activities structured in JavaScript?</span>
-                        <i class="fa-solid fa-chevron-down text-brand-accent transition-transform"></i>
-                    </button>
-                    <div class="faq-content hidden px-6 pb-5 text-slate-400 text-sm leading-relaxed">
-                        All 10 activities are stored inside a centralized state dictionary object (`activitiesConfig`). When a user clicks a tab, an event listener switches the DOM elements and loads the appropriate prompt parameters dynamically!
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Toast Notification Element -->
-    <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 glass-card border border-brand-500/40 px-5 py-3 rounded-xl flex items-center gap-3 text-white shadow-xl">
-        <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400"></i>
-        <span id="toast-message" class="text-sm font-medium">Notification message</span>
     </div>
+
+    <footer class="glass-panel border-t border-slate-800 py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+            <div>
+                <p class="text-slate-300 font-bold">Central New Mexico Community College (CNM)</p>
+                <p class="mt-0.5">Cybersecurity & Computer Information Systems Division &bull; Prof. Nathan</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="text-cyan-400 font-mono">activy01.html - activy10.html</span>
+                <span>&copy; 2026 CNM Cybersecurity</span>
+            </div>
+        </div>
+    </footer>
 
     <script>
-        const activitiesConfig = {
-            1: {
+        const activitiesData = [
+            {
                 id: 1,
-                title: "Full Blog Article & Outline Generator",
-                category: "Long-Form Writing",
-                icon: "fa-newspaper",
-                colorClass: "text-brand-accent",
-                bgClass: "bg-brand-500/20",
-                promptLabel: "Blog Topic or Target Keyword",
-                promptDefault: "10 productivity hacks for remote software engineering teams in 2026",
-                secondaryLabel: "Target Audience / Niche Context",
-                secondaryDefault: "Engineering Managers, Tech Leads & Remote Developers",
-                systemPrompt: "You are an expert SEO blog author. Write a detailed, engaging, well-structured blog post complete with title, outline summary, H2 subheadings, bullet points, and key takeaways.",
-                btnText: "Generate Full Blog Post",
-                demoOutput: `🚀 [Activity #1: SEO Blog Article Output]\n\n# 10 Productivity Hacks for Remote Engineering Teams in 2026\n\n**Target Audience:** Tech Leads & Software Engineers\n**Estimated Reading Time:** 4 mins\n\n---\n\n## Introduction\nIn 2026, remote engineering teams face higher velocity demands than ever before. Success is no longer measured by hours spent online, but by deep-work output and automated collaboration.\n\n## Key Productivity Strategies:\n\n1. **Asynchronous Code Reviews**: Implement automated CI/CD checks before human eyes review, saving up to 4 hours weekly per dev.\n2. **AI Pair Programming Slots**: Dedicate 2-hour daily blocks for autonomous AI code generation and refinement.\n3. **Zero-Meeting Wednesdays**: Protect calendar focus time to prevent context switching.\n4. **Structured Knowledge Base**: Maintain real-time documentation updated via AI summarizers.\n\n## Conclusion\nBy optimizing workflows and reducing friction, remote engineering teams achieve up to 300% higher deployment frequency while maintaining work-life balance.`
+                fileName: "activy01.html",
+                title: "AI Phishing Email Detection & Analysis",
+                category: "offensive",
+                categoryName: "Social Engineering",
+                icon: "fa-envelope-open-text",
+                color: "rose",
+                level: "Beginner",
+                duration: "15 mins",
+                desc: "Analyze incoming suspicious email headers, body text, and embedded URLs using AI heuristics to flag phishing attempts."
             },
-            2: {
+            {
                 id: 2,
-                title: "Viral X / Twitter Thread Writer",
-                category: "Social Viral Engine",
-                icon: "fa-x-twitter",
-                colorClass: "text-sky-400",
-                bgClass: "bg-sky-500/20",
-                promptLabel: "Core Concept or Controversial Take",
-                promptDefault: "Why AI will not replace developers, but developers using AI will replace those who don't",
-                secondaryLabel: "Call to Action / Goal",
-                secondaryDefault: "Drive retweets, bookmarks, and newsletter signups",
-                systemPrompt: "You are a viral X/Twitter thread ghostwriter. Draft a high-engagement 5-part tweet thread starting with a strong scroll-stopping hook, formatted with numbered tweets, emojis, and clear spacing.",
-                btnText: "Generate Viral Thread",
-                demoOutput: `🧵 [Activity #2: Viral X Thread Output]\n\n1/ AI isn't going to take your software engineering job.\n\nBut a developer using AI tools effectively will 100% replace you by 2027.\n\nHere are 5 counterintuitive truths every builder needs to understand today 👇\n\n2/ Truth #1: Speed is the new moat.\nWhat used to take a sprint now takes 20 minutes with generative studio tools. Developers who focus solely on syntax will get left behind; architects who focus on systems will thrive.\n\n3/ Truth #2: Code maintenance > Code writing.\nWriting raw code is becoming commodity work. The real leverage lies in code auditing, security oversight, and AI prompt engineering.\n\n4/ Truth #3: The 10x Engineer is real.\nAI doesn't equalize skills—it multiplies them. Top engineers using AI output 10x more features with higher unit test coverage.\n\n5/ If you found this thread valuable:\n1. Follow for daily AI engineering workflows.\n2. Retweet tweet #1 to share with your network!`
+                fileName: "activy02.html",
+                title: "Automated SIEM Log Anomaly Analyzer",
+                category: "defensive",
+                categoryName: "Defensive Security",
+                icon: "fa-terminal",
+                color: "cyan",
+                level: "Intermediate",
+                duration: "20 mins",
+                desc: "Feed raw auth logs and firewall traffic into an AI parser to detect brute-force attacks and privilege escalation anomalies."
             },
-            3: {
+            {
                 id: 3,
-                title: "High-Response Cold Outreach Email",
-                category: "B2B Sales Pipeline",
-                icon: "fa-envelope",
-                colorClass: "text-indigo-400",
-                bgClass: "bg-indigo-500/20",
-                promptLabel: "Your Product / Service Value Prop",
-                promptDefault: "Synthex AI - An all-in-one AI content workspace that cuts content production costs by 70%",
-                secondaryLabel: "Prospect Industry / Job Title",
-                secondaryDefault: "Head of Growth & CMOs at B2B SaaS Startups",
-                systemPrompt: "You are a top-tier cold email copywriter. Draft a short, hyper-personalized cold outreach email including 3 compelling subject line options, pain point hook, value proposal, and a frictionless low-commitment call to action.",
-                btnText: "Generate Cold Email Sequence",
-                demoOutput: `📧 [Activity #3: Cold Email Copy Output]\n\nSUBJECT LINE OPTIONS:\n- Quick question regarding {{Company}}'s content team scaling\n- Cutting {{Company}}'s content budget by 70% in Q3?\n- Loved your recent LinkedIn post on growth strategy\n\n---\n\nHi {{First_Name}},\n\nNoticed {{Company}} has been aggressively expanding its content publishing schedule recently—huge congratulations on the traction!\n\nQuick question: Is your marketing team still spending 15+ hours per week manually drafting blog posts and social assets across fragmented tools?\n\nWe built Synthex AI to unify 10 specialized content activities into a single workspace. Teams like TechCorp use it to publish 5x more content with a 70% lower acquisition cost.\n\nWould you be open to a quick 5-minute video walkthrough this Thursday afternoon?\n\nBest,\n[Your Name]`
+                fileName: "activy03.html",
+                title: "Cybersecurity Policy & Compliance Writer",
+                category: "governance",
+                categoryName: "Policy & Compliance",
+                icon: "fa-file-shield",
+                color: "purple",
+                level: "Beginner",
+                duration: "15 mins",
+                desc: "Generate tailored NIST 800-53 and ISO 27001 compliant security policy documentation using guided prompt engineering."
             },
-            4: {
+            {
                 id: 4,
-                title: "Meta & Paid Ad Copy Generator",
-                category: "Paid Advertising",
-                icon: "fa-bullhorn",
-                colorClass: "text-pink-400",
-                bgClass: "bg-pink-500/20",
-                promptLabel: "Product Name & Core Benefit",
-                promptDefault: "Synthex AI - Generate high-converting marketing copy and graphics in seconds",
-                secondaryLabel: "Target Audience & Platform",
-                secondaryDefault: "E-Commerce Founders & Agency Owners on Facebook & Instagram",
-                systemPrompt: "You are a direct-response media buyer and ad copywriter. Generate 3 distinct high-converting ad variants using standard direct response frameworks (AIDA, PAS, Benefit-driven). Include headlines, primary text, and CTA buttons.",
-                btnText: "Generate Paid Ad Angles",
-                demoOutput: `📣 [Activity #4: Paid Ad Copy Angles]\n\nVARIANT 1: PAS (Pain - Agitate - Solution)\n• Primary Text: Spending $5,000/mo on freelance writers who deliver generic copy 3 days late? It's burning your ad margins.\nSynthex AI empowers your team to generate SEO articles, viral threads, and ad copy in 30 seconds for a fraction of the cost.\n• Headline: Stop Overpaying For Marketing Copy\n• CTA: Start Free 14-Day Trial\n\n---\n\nVARIANT 2: Benefit-Driven Social Proof\n• Primary Text: "Synthex lowered our customer acquisition cost by 35% in 30 days." Join 15,000+ marketers generating 10x content output with AI.\n• Headline: The #1 AI Content Studio for Agencies\n• CTA: Get Started Now`
+                fileName: "activy04.html",
+                title: "AI Threat Modeling & STRIDE Matrix",
+                category: "threat",
+                categoryName: "Threat Intelligence",
+                icon: "fa-diagram-project",
+                color: "amber",
+                level: "Intermediate",
+                duration: "25 mins",
+                desc: "Input system architecture diagrams and let AI generate full STRIDE threat models and remediation blueprints."
             },
-            5: {
+            {
                 id: 5,
-                title: "LinkedIn Thought Leadership Engine",
-                category: "Professional Branding",
-                icon: "fa-linkedin",
-                colorClass: "text-blue-400",
-                bgClass: "bg-blue-600/20",
-                promptLabel: "Key Lesson, Experience or Metric",
-                promptDefault: "How scaling our remote startup to $1M ARR taught us to eliminate meetings",
-                secondaryLabel: "Industry / Tone Focus",
-                secondaryDefault: "SaaS Founders, Venture Capital & Business Leaders",
-                systemPrompt: "You are a LinkedIn thought leader copywriter. Write a clean, line-spaced LinkedIn post with strong storytelling elements, insightful metrics, clean spacing, and an engaging closing question for comments.",
-                btnText: "Generate LinkedIn Post",
-                demoOutput: `💼 [Activity #5: LinkedIn Thought Leadership Post]\n\nWe hit $1M ARR last month with just 4 full-time team members.\n\nOur secret? We eliminated 90% of our internal meetings.\n\nHere is how we redesigned our asynchronous working environment:\n\n1. Video Over Meetings: Loom replaces 15-minute syncs.\n2. Written PRDs: If it isn't documented, it doesn't exist.\n3. AI Assistance: Every team member uses AI tools to draft weekly reports and customer responses.\n\nThe result? Fewer interruptions, higher focus, and happier employees.\n\nDo you prefer synchronous meetings or asynchronous focus time in your company?\n\nLet me know in the comments below 👇`
+                fileName: "activy05.html",
+                title: "Malware Behavior Summarization Engine",
+                category: "threat",
+                categoryName: "Threat Intelligence",
+                icon: "fa-bug",
+                color: "rose",
+                level: "Advanced",
+                duration: "30 mins",
+                desc: "Process sandbox execution logs and dynamic analysis reports to extract key Indicators of Compromise (IoCs)."
             },
-            6: {
+            {
                 id: 6,
-                title: "SEO Meta Description & Keywords Generator",
-                category: "Search Optimization",
-                icon: "fa-magnifying-glass",
-                colorClass: "text-emerald-400",
-                bgClass: "bg-emerald-500/20",
-                promptLabel: "Webpage Topic or Main Focus",
-                promptDefault: "AI Content Creation Platform for Marketing Agencies",
-                secondaryLabel: "Target Search Engine / Intent",
-                secondaryDefault: "Google Search - Commercial High-Intent Keyword Optimization",
-                systemPrompt: "You are an SEO optimization strategist. Generate 3 SEO Title Tags (under 60 chars), 3 Meta Descriptions (under 155 chars), 10 Focus Keywords categorized by search volume potential, and search intent guidelines.",
-                btnText: "Generate SEO Meta Package",
-                demoOutput: `🔍 [Activity #6: SEO Meta Package]\n\nOPTIMIZED TITLE TAGS (Under 60 Chars):\n1. AI Content Creation Platform | Synthex.ai Studio\n2. Best AI Copywriter for Marketing Agencies in 2026\n3. Synthex AI - Generate Blogs, Ads & Social Copy Fast\n\nMETA DESCRIPTIONS (Under 155 Chars):\n1. Scale your agency content with Synthex AI. Generate SEO blogs, viral tweets, and ad copy in seconds. Try all 10 AI activities free today!\n2. Looking for high-converting AI content? Synthex combines 10 specialized AI tools in one workspace. Start your free trial now!\n\nTOP FOCUS KEYWORDS:\n• Primary: AI content creation platform, AI copywriting software\n• Secondary: automated blog writer, viral thread generator, AI image studio`
+                fileName: "activy06.html",
+                title: "AI Social Engineering Awareness Simulator",
+                category: "offensive",
+                categoryName: "Social Engineering",
+                icon: "fa-user-ninja",
+                color: "amber",
+                level: "Beginner",
+                duration: "15 mins",
+                desc: "Simulate conversational vishing/pretexting scenarios to educate employees on voice and chat manipulation techniques."
             },
-            7: {
+            {
                 id: 7,
-                title: "YouTube Video Script Outline & Hook",
-                category: "Video Content Creation",
-                icon: "fa-youtube",
-                colorClass: "text-red-400",
-                bgClass: "bg-red-500/20",
-                promptLabel: "Video Concept or Tutorial Subject",
-                promptDefault: "How to Build a $10k/month AI Automation Agency Step-by-Step",
-                secondaryLabel: "Target Video Duration",
-                secondaryDefault: "10-12 Minute YouTube Main Video",
-                systemPrompt: "You are a top YouTube scriptwriter. Draft a full YouTube video outline complete with a 15-second retention hook, visual thumbnail ideas, intro, bulleted timestamps, talking points, and call-to-action outro script.",
-                btnText: "Generate YouTube Outline",
-                demoOutput: `📹 [Activity #7: YouTube Script Outline]\n\nTITLE: How to Build a $10k/mo AI Agency in 2026 (Full Step-by-Step Guide)\nTHUMBNAIL IDEA: Split screen showing $0 vs $10,000/mo dashboard with glowing AI nodes.\n\n--- 0:00 - RETENTION HOOK ---\n"90% of people starting AI agencies in 2026 will fail because they sell generic services. In this video, I'm showing you the exact 3-step framework to land $2,500/mo retainer clients on autopilot."\n\n--- 1:15 - SECTION 1: Finding High-Ticket Niche Pain Points ---\n• Focus on local services and real estate agencies.\n• Key visual: On-screen demonstration of client outreach dashboard.\n\n--- 5:30 - SECTION 2: Packaging Your AI Workflow ---\n• How to combine text and image AI generation into client packages.\n\n--- 10:00 - OUTRO & CALL TO ACTION ---\n"Download the free agency checklist in the link below, and hit subscribe for weekly AI growth tactics!"`
+                fileName: "activy07.html",
+                title: "Incident Response Playbook Generator",
+                category: "defensive",
+                categoryName: "Defensive Security",
+                icon: "fa-fire-extinguisher",
+                color: "cyan",
+                level: "Intermediate",
+                duration: "20 mins",
+                desc: "Draft step-by-step containment, eradication, and recovery playbooks for Ransomware and Business Email Compromise."
             },
-            8: {
+            {
                 id: 8,
-                title: "E-Commerce Product Feature & Sales Copy",
-                category: "Product & E-Commerce",
-                icon: "fa-bag-shopping",
-                colorClass: "text-amber-400",
-                bgClass: "bg-amber-500/20",
-                promptLabel: "Product Name & Specifications",
-                promptDefault: "ErgoDesk Pro - Electric Height Adjustable Standing Desk with Bamboo Top & Wireless Charger",
-                secondaryLabel: "Target Buyer Profile",
-                secondaryDefault: "Work-From-Home Professionals & Tech Enthusiasts",
-                systemPrompt: "You are an e-commerce conversion copywriter. Write a compelling Amazon/Shopify product listing complete with catchy title, 5 benefit-first bullet points, and an emotional storytelling description.",
-                btnText: "Generate Product Listing",
-                demoOutput: `🛍️ [Activity #8: E-Commerce Product Listing]\n\nPRODUCT TITLE:\nErgoDesk Pro - Smart Electric Standing Desk with Sustainable Bamboo Top, Built-In Wireless Charging & Memory Presets\n\n5 BENEFIT BULLET POINTS:\n• ⚡ ELEVATE YOUR ENERGY & FOCUS: Smooth, quiet dual-motor lift transitions effortlessly from sitting to standing in seconds.\n• 🌱 SUSTAINABLE NATURAL BEAUTY: Crafted from 100% solid eco-friendly bamboo with scratch-resistant coating.\n• 🔋 INTEGRATED WIRELESS CHARGING: Built-in Qi fast wireless charging pad keeps your desk clutter-free.\n• 🧠 SMART MEMORY PRESETS: Save up to 4 custom height levels for quick one-touch adjustment.\n• 🛡️ BUILT TO LAST: Heavy-duty steel frame supports up to 300 lbs with a 10-year warranty.\n\nPRODUCT DESCRIPTION:\nTransform your daily workflow and eliminate posture fatigue with the ErgoDesk Pro...`
+                fileName: "activy08.html",
+                title: "Automated Vulnerability Patch Scripting",
+                category: "defensive",
+                categoryName: "Defensive Security",
+                icon: "fa-code-compare",
+                color: "emerald",
+                level: "Advanced",
+                duration: "25 mins",
+                desc: "Parse CVE scan outputs and generate verified PowerShell / Bash remediation scripts for missing patches."
             },
-            9: {
+            {
                 id: 9,
-                title: "PR & Official Press Release Writer",
-                category: "Public Relations",
-                icon: "fa-file-contract",
-                colorClass: "text-purple-400",
-                bgClass: "bg-purple-500/20",
-                promptLabel: "Company Milestone / Announcement",
-                promptDefault: "Synthex AI raises $5M Series Seed to expand its 10-in-1 AI Content Creation Workspace",
-                secondaryLabel: "Key Executive & Quote Context",
-                secondaryDefault: "CEO Alex Rivera discussing the future of AI generative workflows",
-                systemPrompt: "You are a senior PR manager. Write a standard press release following official AP style, including FOR IMMEDIATE RELEASE header, dateline, catchy headline, subheadline, executive quote block, and boilerplate.",
-                btnText: "Generate Press Release",
-                demoOutput: `📰 [Activity #9: Press Release Draft]\n\nFOR IMMEDIATE RELEASE\n\nSynthex AI Secures $5M Series Seed Funding to Unify 10 AI Content Creation Workflows into a Single Platform\n\nSAN FRANCISCO, CA – July 2026 – Synthex AI, the leading generative AI workspace for creators and enterprises, today announced it has closed a $5 million Series Seed funding round led by Vortex Ventures.\n\nThe investment will accelerate the development of Synthex's proprietary AI engine, which powers 10 specialized content activities ranging from SEO blog creation to real-time image rendering.\n\n"Content teams are exhausted from juggling dozens of single-purpose AI tools," said Alex Rivera, CEO and Founder of Synthex AI. "Our mission is to streamline the entire content creation lifecycle inside one intelligent studio."\n\nAbout Synthex AI:\nSynthex AI is an all-in-one content engine serving over 15,000 businesses worldwide. For more information, visit https://synthex.ai.`
+                fileName: "activy09.html",
+                title: "Network Packet Inspection & AI Rule Writing",
+                category: "threat",
+                categoryName: "Threat Intelligence",
+                icon: "fa-network-wired",
+                color: "cyan",
+                level: "Advanced",
+                duration: "30 mins",
+                desc: "Analyze Wireshark PCAP text dumps and prompt AI to write customized Snort/Suricata IDS detection rules."
             },
-            10: {
+            {
                 id: 10,
-                title: "AI Image & Graphic Art Prompt Studio",
-                category: "Visual Generative AI",
-                icon: "fa-paintbrush",
-                colorClass: "text-brand-pink",
-                bgClass: "bg-brand-pink/20",
-                promptLabel: "Visual Concept Idea or Artwork Vision",
-                promptDefault: "Futuristic neon cyberpunk studio workspace with glowing AI interfaces, highly detailed 8k art",
-                secondaryLabel: "Aspect Ratio & Lighting Style",
-                secondaryDefault: "16:9 Widescreen, Cinematic Volumetric Lighting & Octane Render",
-                systemPrompt: "You are a master AI prompt engineer for Imagen 4 and Midjourney. Generate 3 hyper-detailed art prompts optimized with lighting keywords, camera angles, style tags, and rendering engine modifiers.",
-                btnText: "Generate AI Art Prompts",
-                demoOutput: `🎨 [Activity #10: Visual Art Engine Prompts]\n\nPROMPT 1: CINEMATIC CYBERPUNK WORKSPACE\n"A cinematic wide-angle shot of a futuristic neon cyberpunk workspace with glowing holographic interfaces, volumetric dark blue and violet lighting, rain reflections on glass windows, 8k resolution, photorealistic render, octane render style --ar 16:9"\n\nPROMPT 2: MINIMALIST PRODUCT BANNER\n"A clean minimalist studio mock-up of a modern tech product sitting on a polished marble pedestal, soft natural sunlight casting gentle shadows, pastel gradient background, ultra-high detailed photorealism --v 6.0"\n\nPROMPT 3: 3D ISOMETRIC VECTOR ART\n"An isometric 3D render of a futuristic digital content studio with flying icons, vibrant purple and indigo gradients, smooth glossy surfaces, blender render style, white background"`
+                fileName: "activy10.html",
+                title: "Ethical AI Matrix & Red Team vs Blue Team",
+                category: "governance",
+                categoryName: "Policy & Compliance",
+                icon: "fa-scale-balanced",
+                color: "purple",
+                level: "Intermediate",
+                duration: "20 mins",
+                desc: "Compare AI defensive shielding against adversarial prompt injection techniques in an interactive Red/Blue simulation."
             }
-        };
+        ];
 
-        let currentActivityId = 1;
+        let completedLabs = JSON.parse(localStorage.getItem('cnm_completed_labs') || '[]');
 
         document.addEventListener('DOMContentLoaded', () => {
-            setupMobileMenu();
-            setupActivityTabs();
-            setupCreativitySlider();
-            setupRunActivityButton();
-            setupInspectorButtons();
-            setupFaqAccordion();
-            setupCopyAndDownload();
-            
-            updateActivityView(1);
+            renderActivities(activitiesData);
+            updateProgressUI();
+
+            // Search filter event listener
+            document.getElementById('activity-search').addEventListener('input', filterActivities);
+            document.getElementById('category-filter').addEventListener('change', filterActivities);
         });
 
-        function setupMobileMenu() {
-            const btn = document.getElementById('mobile-menu-btn');
-            const menu = document.getElementById('mobile-menu');
-            if (btn && menu) {
-                btn.addEventListener('click', () => menu.classList.toggle('hidden'));
+        function renderActivities(data) {
+            const grid = document.getElementById('activities-grid');
+            grid.innerHTML = '';
+
+            if (data.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-12 glass-panel rounded-2xl border border-slate-800">
+                        <i class="fa-solid fa-magnifying-glass text-3xl text-slate-600 mb-2"></i>
+                        <p class="text-slate-400 font-mono text-xs">No cybersecurity activities matched your filter criteria.</p>
+                    </div>
+                `;
+                return;
             }
-        }
 
-        function setupActivityTabs() {
-            const tabs = document.querySelectorAll('.activity-tab');
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    const actId = parseInt(tab.dataset.activity);
-                    if (actId) switchActivity(actId);
-                });
+            data.forEach(act => {
+                const isCompleted = completedLabs.includes(act.id);
+                
+                const card = document.createElement('div');
+                card.className = `glass-panel rounded-2xl p-6 flex flex-col justify-between border border-slate-800/80 hover:border-cyan-500/40 transition-all duration-300 relative group`;
+                
+                card.innerHTML = `
+                    <div>
+                        <!-- Top Header Row -->
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center text-cyan-400 text-lg group-hover:text-emerald-400 transition-colors">
+                                    <i class="fa-solid ${act.icon}"></i>
+                                </div>
+                                <div>
+                                    <span class="text-[10px] font-mono uppercase tracking-widest text-slate-400">Activity #${act.id < 10 ? '0' + act.id : act.id}</span>
+                                    <span class="block text-xs font-bold text-slate-300">${act.categoryName}</span>
+                                </div>
+                            </div>
+                            <!-- Completion Toggle Checkbox -->
+                            <button onclick="toggleCompletion(${act.id})" title="Mark as completed" class="w-8 h-8 rounded-lg ${isCompleted ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50' : 'bg-slate-900 text-slate-600 border-slate-800 hover:text-slate-400'} border flex items-center justify-center transition-all">
+                                <i class="fa-solid fa-check text-xs"></i>
+                            </button>
+                        </div>
+
+                        <!-- Activity Title -->
+                        <h4 class="text-base font-bold text-white group-hover:text-cyan-300 transition-colors">
+                            ${act.title}
+                        </h4>
+
+                        <!-- Description -->
+                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+                            ${act.desc}
+                        </p>
+                    </div>
+
+                    <!-- Card Footer Metrics & Launch Link -->
+                    <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between">
+                        <div class="flex items-center gap-2 font-mono text-[11px] text-slate-500">
+                            <span><i class="fa-regular fa-clock text-slate-600 mr-1"></i>${act.duration}</span>
+                            <span>&bull;</span>
+                            <span class="text-amber-400/80">${act.level}</span>
+                        </div>
+
+                        <!-- Direct Launch Button targeting activy01.html ... activy10.html -->
+                        <a href="${act.fileName}" class="px-3 py-1.5 bg-cyan-500/10 hover:bg-cyan-500 text-cyan-300 hover:text-slate-950 text-xs font-mono font-bold rounded-lg border border-cyan-500/30 transition-all flex items-center gap-1.5">
+                            <span>Launch</span>
+                            <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </a>
+                    </div>
+                `;
+                grid.appendChild(card);
             });
         }
 
-        function switchActivity(actId) {
-            currentActivityId = actId;
-            const tabs = document.querySelectorAll('.activity-tab');
-            tabs.forEach(t => {
-                if (parseInt(t.dataset.activity) === actId) {
-                    t.classList.add('activity-tab-active');
-                } else {
-                    t.classList.remove('activity-tab-active');
-                }
-            });
-            updateActivityView(actId);
-        }
+        function filterActivities() {
+            const query = document.getElementById('activity-search').value.toLowerCase();
+            const category = document.getElementById('category-filter').value;
 
-        function switchAndScrollToActivity(actId) {
-            switchActivity(actId);
-            const hub = document.getElementById('activities-hub');
-            if (hub) hub.scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function updateActivityView(actId) {
-            const config = activitiesConfig[actId];
-            if (!config) return;
-
-            document.getElementById('activity-num-display').textContent = config.id;
-            document.getElementById('activity-category-badge').textContent = config.category;
-            document.getElementById('activity-title-display').textContent = config.title;
-
-            const badgeIcon = document.getElementById('activity-badge-icon');
-            badgeIcon.className = `w-12 h-12 rounded-xl ${config.bgClass} ${config.colorClass} flex items-center justify-center text-xl shrink-0`;
-            badgeIcon.innerHTML = `<i class="fa-solid ${config.icon}"></i>`;
-
-            document.getElementById('prompt-label').textContent = config.promptLabel;
-            document.getElementById('prompt-input').value = config.promptDefault;
-
-            document.getElementById('secondary-label').textContent = config.secondaryLabel;
-            document.getElementById('secondary-input').value = config.secondaryDefault;
-
-            document.getElementById('run-btn-text').textContent = `Execute Activity #${config.id}`;
-        }
-
-        function setupCreativitySlider() {
-            const slider = document.getElementById('creativity-slider');
-            const label = document.getElementById('creativity-val');
-            const levels = ["Low (1.0)", "Focused (2.0)", "Balanced (3.5)", "Creative (4.0)", "Maximum (5.0)"];
-            if (slider && label) {
-                slider.addEventListener('input', (e) => {
-                    label.textContent = levels[e.target.value - 1];
-                });
-            }
-        }
-
-        function setupRunActivityButton() {
-            const btn = document.getElementById('run-activity-btn');
-            const outputContainer = document.getElementById('output-container');
-            const statusText = document.getElementById('output-status-text');
-
-            btn.addEventListener('click', async () => {
-                const config = activitiesConfig[currentActivityId];
-                const promptVal = document.getElementById('prompt-input').value.trim();
-                const secondaryVal = document.getElementById('secondary-input').value.trim();
-                const toneVal = document.getElementById('tone-select').value;
-                const lengthVal = document.getElementById('length-select').value;
-
-                if (!promptVal) {
-                    showToast("Please enter a prompt!", "error");
-                    return;
-                }
-
-                btn.disabled = true;
-                btn.classList.add('opacity-75');
-                btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin text-amber-300"></i> <span>Synthesizing Activity #${currentActivityId}...</span>`;
-                statusText.textContent = `Activity #${currentActivityId} Processing...`;
-                outputContainer.innerHTML = `<span class="text-brand-accent animate-pulse">⚡ Connecting to Gemini 3 Flash API...</span>`;
-
-                try {
-                    const systemInstructionText = `${config.systemPrompt} Tone: ${toneVal}. Word Length: ${lengthVal}.`;
-                    const userQueryText = `Activity #${config.id}:\n${config.promptLabel}: ${promptVal}\n${config.secondaryLabel}: ${secondaryVal}`;
-
-                    const apiKey = ""; // Insert your Gemini API key here
-                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
-
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            contents: [{ parts: [{ text: userQueryText }] }],
-                            systemInstruction: { parts: [{ text: systemInstructionText }] }
-                        })
-                    });
-
-                    const result = await response.json();
-                    const text = result?.candidates?.[0]?.content?.parts?.[0]?.text;
-
-                    if (text) {
-                        outputContainer.textContent = text;
-                        statusText.textContent = `Activity #${currentActivityId} Completed`;
-                        showToast(`Activity #${currentActivityId} output ready!`);
-                    } else {
-                        throw new Error("Empty response");
-                    }
-                } catch (err) {
-                    outputContainer.textContent = config.demoOutput;
-                    statusText.textContent = `Demo Engine Preview (Activity #${currentActivityId})`;
-                    showToast(`Activity #${currentActivityId} preview loaded!`, "info");
-                } finally {
-                    btn.disabled = false;
-                    btn.classList.remove('opacity-75');
-                    btn.innerHTML = `<i class="fa-solid fa-bolt text-amber-300"></i> <span id="run-btn-text">Execute Activity #${currentActivityId}</span>`;
-                    updateMetrics();
-                }
-            });
-        }
-
-        function updateMetrics() {
-            const text = document.getElementById('output-container').innerText || "";
-            const words = text.trim() ? text.trim().split(/\s+/).length : 0;
-            const chars = text.length;
-            const readTime = Math.ceil(words / 200);
-
-            document.getElementById('metric-word-count').textContent = words;
-            document.getElementById('metric-char-count').textContent = chars;
-            document.getElementById('metric-read-time').textContent = `${readTime} min`;
-        }
-
-        function setupInspectorButtons() {
-            const btns = document.querySelectorAll('.inspector-btn');
-            const codeBlock = document.getElementById('inspector-code-block');
-
-            btns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    btns.forEach(b => {
-                        b.classList.remove('active', 'bg-slate-800', 'text-emerald-400');
-                        b.classList.add('bg-slate-900', 'text-slate-400');
-                    });
-                    btn.classList.add('active', 'bg-slate-800', 'text-emerald-400');
-
-                    const actId = btn.dataset.act;
-                    const conf = activitiesConfig[actId];
-                    codeBlock.textContent = `// Activity #${conf.id} Code Definition\nconst activity${conf.id} = {\n    title: "${conf.title}",\n    category: "${conf.category}",\n    systemPrompt: "${conf.systemPrompt}",\n    execute: async (prompt, secondary) => {\n        return fetchGeminiAPI(prompt, secondary);\n    }\n};`;
-                });
-            });
-        }
-
-        function setupFaqAccordion() {
-            const toggles = document.querySelectorAll('.faq-toggle');
-            toggles.forEach(toggle => {
-                toggle.addEventListener('click', () => {
-                    const content = toggle.nextElementSibling;
-                    content.classList.toggle('hidden');
-                });
-            });
-        }
-
-        function setupCopyAndDownload() {
-            const copyBtn = document.getElementById('copy-text-btn');
-            const downloadBtn = document.getElementById('download-text-btn');
-            const outputContainer = document.getElementById('output-container');
-
-            copyBtn.addEventListener('click', () => {
-                const text = outputContainer.innerText;
-                if (!text) return;
-                const textarea = document.createElement('textarea');
-                textarea.value = text;
-                document.body.appendChild(textarea);
-                textarea.select();
-                try {
-                    document.execCommand('copy');
-                    showToast("Copied to clipboard!");
-                } catch (e) {
-                    showToast("Copy failed", "error");
-                }
-                document.body.removeChild(textarea);
+            const filtered = activitiesData.filter(act => {
+                const matchesSearch = act.title.toLowerCase().includes(query) || act.desc.toLowerCase().includes(query) || act.fileName.toLowerCase().includes(query);
+                const matchesCategory = category === 'all' || act.category === category;
+                return matchesSearch && matchesCategory;
             });
 
-            downloadBtn.addEventListener('click', () => {
-                const text = outputContainer.innerText;
-                if (!text) return;
-                const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `synthex-activity-${currentActivityId}-output.txt`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                showToast("Text downloaded!");
-            });
+            renderActivities(filtered);
         }
 
-        function showToast(message, type = "success") {
-            const toast = document.getElementById('toast');
-            const toastMsg = document.getElementById('toast-message');
-            const toastIcon = document.getElementById('toast-icon');
-
-            if (!toast) return;
-            toastMsg.textContent = message;
-
-            if (type === "error") {
-                toastIcon.className = "fa-solid fa-circle-xmark text-rose-500";
-            } else if (type === "info") {
-                toastIcon.className = "fa-solid fa-circle-info text-sky-400";
+        function toggleCompletion(id) {
+            if (completedLabs.includes(id)) {
+                completedLabs = completedLabs.filter(item => item !== id);
             } else {
-                toastIcon.className = "fa-solid fa-circle-check text-emerald-400";
+                completedLabs.push(id);
             }
+            localStorage.setItem('cnm_completed_labs', JSON.stringify(completedLabs));
+            updateProgressUI();
+            filterActivities(); // re-render to update checkmarks
+        }
 
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            setTimeout(() => {
-                toast.classList.add('translate-y-20', 'opacity-0');
-            }, 3000);
+        function updateProgressUI() {
+            const count = completedLabs.length;
+            const percentage = (count / 10) * 100;
+
+            document.getElementById('header-progress-count').textContent = `${count} / 10`;
+            document.getElementById('header-progress-bar').style.width = `${percentage}%`;
+            document.getElementById('mobile-progress-text').textContent = `${count}/10 Labs`;
+        }
+
+        function toggleFaq(id) {
+            const el = document.getElementById(id);
+            const icon = document.getElementById(`${id}-icon`);
+            if (el) {
+                el.classList.toggle('hidden');
+                icon.classList.toggle('rotate-180');
+            }
+        }
+
+        function toggleTerminalModal() {
+            const modal = document.getElementById('terminal-modal');
+            modal.classList.toggle('hidden');
+            if (!modal.classList.contains('hidden')) {
+                document.getElementById('terminal-input').focus();
+            }
+        }
+
+        function handleTerminalCommand(e) {
+            if (e.key === 'Enter') {
+                const input = e.target.value.trim().toLowerCase();
+                const output = document.getElementById('terminal-output');
+                
+                // Echo command
+                const echo = document.createElement('p');
+                echo.className = 'text-cyan-400';
+                echo.textContent = `$ ${input}`;
+                output.appendChild(echo);
+
+                const response = document.createElement('p');
+                response.className = 'text-slate-300';
+
+                if (input === 'help') {
+                    response.innerHTML = `Available commands:<br>- <span class="text-yellow-400">list</span>: Display all 10 activity file names<br>- <span class="text-yellow-400">status</span>: Show student progress<br>- <span class="text-yellow-400">clear</span>: Clear terminal console<br>- <span class="text-yellow-400">about</span>: Instructor information`;
+                } else if (input === 'list') {
+                    response.innerHTML = activitiesData.map(a => `<span class="text-emerald-400">${a.fileName}</span> - ${a.title}`).join('<br>');
+                } else if (input === 'status') {
+                    response.textContent = `Progress: ${completedLabs.length} out of 10 lab activities completed.`;
+                } else if (input === 'about') {
+                    response.textContent = `Prof. Nathan | Cybersecurity Department | Central New Mexico Community College (CNM).`;
+                } else if (input === 'clear') {
+                    output.innerHTML = '';
+                    e.target.value = '';
+                    return;
+                } else if (input === '') {
+                    e.target.value = '';
+                    return;
+                } else {
+                    response.className = 'text-rose-400';
+                    response.textContent = `Command not recognized: '${input}'. Type 'help' for available commands.`;
+                }
+
+                output.appendChild(response);
+                output.scrollTop = output.scrollHeight;
+                e.target.value = '';
+            }
         }
     </script>
 </body>
