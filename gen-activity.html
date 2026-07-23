@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IPv6 Compression: A Step-by-Step Tutorial</title>
+<style>
+  :root {
+    --user-primary: #1a4480;
+    --user-accent: #c8102e;
+    --user-background: #ffffff;
+    --text-main: #1b1b1b;
+    --text-muted: #4a4a4a;
+    --surface: #f4f6f9;
+    --surface-border: #d7dde5;
+    --success-bg: #e6f4ea;
+    --success-border: #2e7d32;
+    --success-text: #1e4d22;
+    --error-bg: #fdecec;
+    --error-border: #a30d20;
+    --error-text: #7a0a17;
+    --focus-ring: #0b5fff;
+    --font-standard: "Atkinson Hyperlegible", "Segoe UI", Arial, sans-serif;
+    --font-dyslexic: "OpenDyslexic", "Atkinson Hyperlegible", "Segoe UI", Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--user-background);
+    color: var(--text-main);
+    font-family: var(--font-standard);
+    line-height: 1.6;
+    font-size: 1.05rem;
+  }
+
+  body.dyslexic-font {
+    font-family: var(--font-dyslexic);
+    letter-spacing: 0.02em;
+  }
+
+  a { color: var(--user-primary); }
+
+  .skip-link {
+    position: absolute;
+    left: -999px;
+    top: 0;
+    background: var(--user-primary);
+    color: #fff;
+    padding: 0.75rem 1rem;
+    z-index: 100;
+    border-radius: 0 0 6px 0;
+  }
+  .skip-link:focus {
+    left: 0;
+  }
+
+  header.site-header {
+    background: var(--user-primary);
+    color: #ffffff;
+    padding: 1.25rem 1.5rem;
+  }
+
+  .header-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .header-inner h1 {
+    margin: 0;
+    font-size: 1.4rem;
+  }
+
+  .header-inner p {
+    margin: 0.25rem 0 0;
+    font-size: 0.95rem;
+    color: #dce6f5;
+  }
+
+  .toolbar {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .toggle-btn {
+    background: #ffffff;
+    color: var(--user-primary);
+    border: 2px solid #ffffff;
+    border-radius: 999px;
+    padding: 0.45rem 0.9rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .toggle-btn[aria-pressed="true"] {
+    background: var(--user-accent);
+    color: #ffffff;
+    border-color: var(--user-accent);
+  }
+
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1.5rem;
+  }
+
+  nav.progress-nav {
+    margin: 1.25rem 0;
+  }
+
+  .progress-track {
+    display: flex;
+    gap: 0.4rem;
+    list-style: none;
+    padding: 0;
+    margin: 0 0 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .progress-track li {
+    flex: 1 1 auto;
+    min-width: 34px;
+  }
+
+  .progress-track button {
+    width: 100%;
+    padding: 0.5rem 0.3rem;
+    border: 2px solid var(--surface-border);
+    background: var(--surface);
+    color: var(--text-muted);
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+
+  .progress-track button[aria-current="step"] {
+    background: var(--user-primary);
+    border-color: var(--user-primary);
+    color: #ffffff;
+  }
+
+  .progress-track button.completed {
+    border-color: var(--user-primary);
+    color: var(--user-primary);
+  }
+
+  .progress-label {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+
+  .step-panel {
+    background: var(--user-background);
+    border: 1px solid var(--surface-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .step-panel h2 {
+    color: var(--user-primary);
+    margin-top: 0;
+    font-size: 1.4rem;
+  }
+
+  .step-panel h3 {
+    color: var(--user-primary);
+    font-size: 1.1rem;
+  }
+
+  .objectives-box {
+    background: var(--surface);
+    border-left: 5px solid var(--user-primary);
+    border-radius: 6px;
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+  }
+
+  .objectives-box ul {
+    margin: 0.5rem 0 0;
+    padding-left: 1.25rem;
+  }
+
+  .addr-block {
+    font-family: "Courier New", monospace;
+    background: #10233f;
+    color: #eaf1ff;
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 1.15rem;
+    letter-spacing: 0.03em;
+    overflow-x: auto;
+    margin: 1rem 0;
+  }
+
+  .addr-block .grp {
+    padding: 0 2px;
+    border-radius: 3px;
+  }
+
+  .addr-block .grp.removed {
+    background: var(--user-accent);
+    text-decoration: line-through;
+  }
+
+  .addr-block .grp.kept {
+    background: #2e5aa8;
+  }
+
+  .worked-steps {
+    list-style: none;
+    padding: 0;
+    counter-reset: step-counter;
+  }
+
+  .worked-steps li {
+    counter-increment: step-counter;
+    position: relative;
+    padding: 0.75rem 0 0.75rem 2.75rem;
+    border-bottom: 1px dashed var(--surface-border);
+  }
+
+  .worked-steps li:last-child { border-bottom: none; }
+
+  .worked-steps li::before {
+    content: counter(step-counter);
+    position: absolute;
+    left: 0;
+    top: 0.6rem;
+    background: var(--user-primary);
+    color: #fff;
+    width: 1.9rem;
+    height: 1.9rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+
+  .callout {
+    border-radius: 8px;
+    padding: 0.9rem 1.1rem;
+    margin: 1rem 0;
+    border: 1px solid;
+  }
+
+  .callout.tip {
+    background: #eef6ff;
+    border-color: #a9c8f0;
+    color: #123a6b;
+  }
+
+  .callout.warning {
+    background: #fff4e5;
+    border-color: #e0a951;
+    color: #6b4a06;
+  }
+
+  .callout strong { display: block; margin-bottom: 0.25rem; }
+
+  fieldset {
+    border: 1px solid var(--surface-border);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+  }
+
+  legend {
+    font-weight: 700;
+    color: var(--user-primary);
+    padding: 0 0.4rem;
+  }
+
+  .option-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0.5rem 0.25rem;
+    border-radius: 6px;
+  }
+
+  .option-row label {
+    cursor: pointer;
+    flex: 1;
+  }
+
+  .option-row input[type="radio"],
+  .option-row input[type="checkbox"] {
+    width: 1.15rem;
+    height: 1.15rem;
+    margin-top: 0.2rem;
+    accent-color: var(--user-primary);
+  }
+
+  input[type="text"] {
+    font-family: "Courier New", monospace;
+    font-size: 1.05rem;
+    padding: 0.55rem 0.7rem;
+    border: 2px solid var(--surface-border);
+    border-radius: 6px;
+    width: 100%;
+    max-width: 420px;
+  }
+
+  label.field-label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 0.35rem;
+  }
+
+  button {
+    font-family: inherit;
+  }
+
+  .action-btn {
+    background: var(--user-primary);
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.65rem 1.3rem;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 0.75rem;
+    margin-right: 0.5rem;
+  }
+
+  .action-btn.secondary {
+    background: #ffffff;
+    color: var(--user-primary);
+    border: 2px solid var(--user-primary);
+  }
+
+  .action-btn:hover { opacity: 0.92; }
+
+  *:focus-visible {
+    outline: 3px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+
+  .feedback {
+    margin-top: 1rem;
+    padding: 0.85rem 1rem;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    font-weight: 600;
+    display: none;
+  }
+
+  .feedback.show { display: block; }
+
+  .feedback.correct {
+    background: var(--success-bg);
+    border-color: var(--success-border);
+    color: var(--success-text);
+  }
+
+  .feedback.incorrect {
+    background: var(--error-bg);
+    border-color: var(--error-border);
+    color: var(--error-text);
+  }
+
+  .nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .media-note {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+
+  table.compress-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.95rem;
+  }
+
+  table.compress-table th,
+  table.compress-table td {
+    border: 1px solid var(--surface-border);
+    padding: 0.6rem 0.7rem;
+    text-align: left;
+  }
+
+  table.compress-table th {
+    background: var(--surface);
+    color: var(--user-primary);
+  }
+
+  .badge {
+    display: inline-block;
+    background: var(--user-accent);
+    color: #ffffff;
+    border-radius: 999px;
+    padding: 0.15rem 0.6rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-left: 0.4rem;
+  }
+
+  .summary-list {
+    padding-left: 1.25rem;
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  footer {
+    text-align: center;
+    padding: 1.5rem;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+
+  @media (max-width: 600px) {
+    .addr-block { font-size: 0.95rem; }
+    .header-inner h1 { font-size: 1.2rem; }
+    .progress-track button { font-size: 0.75rem; padding: 0.4rem 0.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div>
+      <h1>IPv6 Compression</h1>
+      <p>A step-by-step tutorial for beginners</p>
+    </div>
+    <div class="toolbar">
+      <button type="button" id="fontToggle" class="toggle-btn" aria-pressed="false">
+        Dyslexia-friendly font: Off
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main-content">
+
+  <nav class="progress-nav" aria-label="Tutorial steps">
+    <ul class="progress-track" id="progressTrack" role="list"></ul>
+    <p class="progress-label" id="progressLabel">Step 1 of 7</p>
+  </nav>
+
+  <!-- STEP 1 -->
+  <section class="step-panel" data-step="1" aria-labelledby="step1-heading">
+    <h2 id="step1-heading">1. Welcome and Goals</h2>
+    <p>IPv6 is the newest version of the Internet Protocol. It gives every device on the internet a unique address. IPv6 addresses are long, so people use short forms to write them. This tutorial teaches you how to read and write those short forms.</p>
+
+    <div class="objectives-box">
+      <strong>By the end of this tutorial, you will be able to:</strong>
+      <ul>
+        <li>Remember the two rules used to shorten (compress) an IPv6 address.</li>
+        <li>Understand why each rule works.</li>
+        <li>Apply both rules to compress a full IPv6 address correctly.</li>
+      </ul>
+    </div>
+
+    <p class="callout tip"><strong>Quick definition</strong> "Compression" here means writing the same address with fewer characters. It does not change the address. It only changes how it looks.</p>
+
+    <div class="nav-buttons">
+      <span></span>
+      <button type="button" class="action-btn next-btn">Start: What is an IPv6 address? →</button>
+    </div>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="step-panel" data-step="2" aria-labelledby="step2-heading" hidden>
+    <h2 id="step2-heading">2. The Structure of an IPv6 Address</h2>
+    <p>An IPv6 address has <strong>128 bits</strong>. To make it easier to read, we split it into <strong>8 groups</strong>. Each group has <strong>4 hexadecimal digits</strong> (numbers 0–9 and letters a–f). Groups are separated by colons ( : ).</p>
+
+    <div class="addr-block" aria-label="Example full IPv6 address">
+      2001:0db8:0000:0042:0000:8a2e:0370:7334
+    </div>
+
+    <table class="compress-table">
+      <caption class="visually-hidden">Parts of an IPv6 address</caption>
+      <thead>
+        <tr><th>Part</th><th>What it means</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>8 groups</td><td>Each address has exactly 8 groups of digits.</td></tr>
+        <tr><td>4 digits per group</td><td>Each group can have up to 4 hex digits (0–9, a–f).</td></tr>
+        <tr><td>Colons</td><td>Colons separate the 8 groups from each other.</td></tr>
+      </tbody>
+    </table>
+
+    <p class="callout warning"><strong>Common mix-up</strong> Do not confuse IPv6 colons ( : ) with IPv4 dots ( . ). IPv4 looks like 192.168.1.1. IPv6 looks like the example above.</p>
+
+    <div class="nav-buttons">
+      <button type="button" class="action-btn secondary prev-btn">← Back</button>
+      <button type="button" class="action-btn next-btn">Next: Rule 1 →</button>
+    </div>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="step-panel" data-step="3" aria-labelledby="step3-heading" hidden>
+    <h2 id="step3-heading">3. Rule 1 — Drop Leading Zeros</h2>
+    <p>Inside each group, you can drop (remove) zeros at the <strong>start</strong> of the group. You keep at least one digit per group.</p>
+
+    <h3>Example</h3>
+    <div class="addr-block">
+      <span class="grp"><span class="removed">00</span><span class="kept">42</span></span> → becomes <span class="kept">42</span>
+    </div>
+
+    <ul class="worked-steps">
+      <li>Look at the group: <code>0042</code></li>
+      <li>Find the zeros at the very start: <code>00</code></li>
+      <li>Remove only the leading zeros. Do not remove zeros in the middle or end.</li>
+      <li>Result: <code>42</code></li>
+    </ul>
+
+    <p class="callout warning"><strong>Common mix-up</strong> The group <code>0db8</code> becomes <code>db8</code>, not <code>db</code>. Only the leading zero is dropped. The zero is not in the middle here, so it is safe to drop just that first one.</p>
+
+    <fieldset>
+      <legend>Quick check: Apply Rule 1</legend>
+      <p id="q1-prompt">What does the group <code>0000</code> become after Rule 1 is applied?</p>
+      <div class="option-row">
+        <input type="radio" name="q1" id="q1a" value="wrong">
+        <label for="q1a">It disappears completely (empty group).</label>
+      </div>
+      <div class="option-row">
+        <input type="radio" name="q1" id="q1b" value="correct">
+        <label for="q1b"><code>0</code></label>
+      </div>
+      <div class="option-row">
+        <input type="radio" name="q1" id="q1c" value="wrong">
+        <label for="q1c"><code>000</code></label>
+      </div>
+      <button type="button" class="action-btn check-btn" data-question="q1" data-fb="q1-fb">Check answer</button>
+      <div class="feedback" id="q1-fb" role="status" aria-live="polite"></div>
+    </fieldset>
+
+    <div class="nav-buttons">
+      <button type="button" class="action-btn secondary prev-btn">← Back</button>
+      <button type="button" class="action-btn next-btn">Next: Rule 2 →</button>
+    </div>
+  </section>
+
+  <!-- STEP 4 -->
+  <section class="step-panel" data-step="4" aria-labelledby="step4-heading" hidden>
+    <h2 id="step4-heading">4. Rule 2 — Replace Zero Groups with a Double Colon</h2>
+    <p>If you have one or more groups in a row that are all <code>0</code>, you can replace them with a double colon <code>::</code>. This can only be done <strong>one time</strong> in an address.</p>
+
+    <div class="callout warning">
+      <strong>Why only once?</strong>
+      If you used <code>::</code> twice, the computer would not know how many zero groups belong to each <code>::</code>. The address would be unclear. So the rule keeps the address readable.
+    </div>
+
+    <h3>Example</h3>
+    <div class="addr-block">
+      2001:db8:<span class="removed">0:0:0</span>:8a2e:370:7334 → 2001:db8<span class="kept">::</span>8a2e:370:7334
+    </div>
+
+    <ul class="worked-steps">
+      <li>Scan the address for a run of consecutive all-zero groups.</li>
+      <li>Find the <strong>longest</strong> run. Here, three groups in a row are all zero.</li>
+      <li>Replace that whole run with <code>::</code></li>
+      <li>Keep every other group the same.</li>
+    </ul>
+
+    <p class="callout tip"><strong>Tip</strong> If there are two separate runs of zero groups, only compress the <strong>longer</strong> one with <code>::</code>. Write the shorter run out normally.</p>
+
+    <fieldset>
+      <legend>Quick check: Apply Rule 2</legend>
+      <p>An address has two separate runs of zero groups: one run of 2 groups, and one run of 4 groups. Which run should you replace with <code>::</code>?</p>
+      <div class="option-row">
+        <input type="radio" name="q2" id="q2a" value="wrong">
+        <label for="q2a">The run of 2 groups.</label>
+      </div>
+      <div class="option-row">
+        <input type="radio" name="q2" id="q2b" value="correct">
+        <label for="q2b">The run of 4 groups.</label>
+      </div>
+      <div class="option-row">
+        <input type="radio" name="q2" id="q2c" value="wrong">
+        <label for="q2c">Both runs, using <code>::</code> twice.</label>
+      </div>
+      <button type="button" class="action-btn check-btn" data-question="q2" data-fb="q2-fb">Check answer</button>
+      <div class="feedback" id="q2-fb" role="status" aria-live="polite"></div>
+    </fieldset>
+
+    <div class="nav-buttons">
+      <button type="button" class="action-btn secondary prev-btn">← Back</button>
+      <button type="button" class="action-btn next-btn">Next: Worked Example →</button>
+    </div>
+  </section>
+
+  <!-- STEP 5 -->
+  <section class="step-panel" data-step="5" aria-labelledby="step5-heading" hidden>
+    <h2 id="step5-heading">5. Full Worked Example</h2>
+    <p>Let's compress this full address using both rules, one step at a time.</p>
+
+    <div class="addr-block">
+      2001:0db8:0000:0000:0000:0000:1428:57ab
+    </div>
+
+    <ul class="worked-steps">
+      <li><strong>Apply Rule 1 to every group.</strong> Drop leading zeros in each group.<br>
+        <code>2001 : db8 : 0 : 0 : 0 : 0 : 1428 : 57ab</code></li>
+      <li><strong>Find runs of all-zero groups.</strong> Groups 3, 4, 5, and 6 are all <code>0</code>. That is a run of 4 groups.</li>
+      <li><strong>Apply Rule 2.</strong> Replace that run with <code>::</code><br>
+        <code>2001:db8::1428:57ab</code></li>
+      <li><strong>Check the result.</strong> The compressed address still represents the same 128-bit address, just written shorter.</li>
+    </ul>
+
+    <div class="addr-block">
+      Final answer: <span class="kept">2001:db8::1428:57ab</span>
+    </div>
+
+    <p class="callout tip"><strong>Why this matters</strong> Shorter addresses are easier for people to read, type, and troubleshoot. Computers still understand the full 128-bit value either way.</p>
+
+    <p class="media-note">Note: If a narrated video version of this example is added later, captions or a transcript must be provided.</p>
+
+    <div class="nav-buttons">
+      <button type="button" class="action-btn secondary prev-btn">← Back</button>
+      <button type="button" class="action-btn next-btn">Next: Your Turn →</button>
+    </div>
+  </section>
+
+  <!-- STEP 6 -->
+  <section class="step-panel" data-step="6" aria-labelledby="step6-heading" hidden>
+    <h2 id="step6-heading">6. Your Turn: Practice</h2>
+    <p>Now try compressing an address yourself. Use both rules from this tutorial.</p>
+
+    <div class="addr-block">
+      ff02:0000:0000:0000:0000:0000:0000:0001
+    </div>
+
+    <label class="field-label" for="practiceInput">Type the compressed address:</label>
+    <input type="text" id="practiceInput" placeholder="e.g. 2001:db8::1428:57ab" autocomplete="off" spellcheck="false">
+    <div>
+      <button type="button" class="action-btn" id="checkPractice">Check my answer</button>
+      <button type="button" class="action-btn secondary" id="hintBtn">Show a hint</button>
+    </div>
+    <p class="feedback" id="hint-fb" role="status" aria-live="polite"></p>
+    <div class="feedback" id="practice-fb" role="status" aria-live="polite"></div>
+
+    <fieldset style="margin-top:1.5rem;">
+      <legend>One more check</legend>
+      <p>Which of these is a correctly compressed IPv6 address?</p>
+      <div class="option-row">
+        <input type="radio" name="q3" id="q3a" value="wrong">
+        <label for="q3a"><code>2001::db8::1</code></label>
+      </div>
+      <div class="option-row">
+        <input type="radio" name="q3" id="q3b" value="correct">
+        <label for="q3b"><code>2001:db8::1</code></label>
+      </div>
+      <div class="option-row">
+        <input type="radio" name="q3" id="q3c" value="wrong">
+        <label for="q3c"><code>2001:0db8:0000:0000:0000:0000:0000:0001</code> with an extra colon added</label>
+      </div>
+      <button type="button" class="action-btn check-btn" data-question="q3" data-fb="q3-fb">Check answer</button>
+      <div class="feedback" id="q3-fb" role="status" aria-live="polite"></div>
+    </fieldset>
+
+    <div class="nav-buttons">
+      <button type="button" class="action-btn secondary prev-btn">← Back</button>
+      <button type="button" class="action-btn next-btn">Next: Summary →</button>
+    </div>
+  </section>
+
+  <!-- STEP 7 -->
+  <section class="step-panel" data-step="7" aria-labelledby="step7-heading" hidden>
+    <h2 id="step7-heading">7. Summary</h2>
+    <p>Great work! Here is what you learned:</p>
+    <ul class="summary-list">
+      <li>An IPv6 address has 8 groups of hex digits, separated by colons.</li>
+      <li><strong>Rule 1:</strong> Drop leading zeros inside a group.</li>
+      <li><strong>Rule 2:</strong> Replace the <strong>longest</strong> run of all-zero groups with <code>::</code>, and only do this once.</li>
+      <li>Compression changes how the address looks, not what it means.</li>
+    </ul>
+
+    <div class="callout tip">
+      <strong>Keep practicing</strong>
+      Try compressing addresses you find in networking documentation or textbooks. The more you practice, the faster you will recognize the patterns.
+    </div>
+
+    <div class="nav-buttons">
+      <button type="button" class="action-btn secondary prev-btn">← Back</button>
+      <button type="button" class="action-btn" id="restartBtn">Restart Tutorial</button>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>IPv6 Compression Tutorial &middot; Built for community college learners</p>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  var steps = Array.prototype.slice.call(document.querySelectorAll(".step-panel"));
+  var totalSteps = steps.length;
+  var currentStep = 1;
+  var completed = {};
+
+  var progressTrack = document.getElementById("progressTrack");
+  var progressLabel = document.getElementById("progressLabel");
+
+  function buildProgressNav() {
+    progressTrack.innerHTML = "";
+    for (var i = 1; i <= totalSteps; i++) {
+      var li = document.createElement("li");
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.textContent = i;
+      btn.setAttribute("aria-label", "Go to step " + i + " of " + totalSteps);
+      btn.dataset.target = i;
+      btn.addEventListener("click", function (e) {
+        goToStep(parseInt(e.currentTarget.dataset.target, 10));
+      });
+      li.appendChild(btn);
+      progressTrack.appendChild(li);
+    }
+    updateProgressNav();
+  }
+
+  function updateProgressNav() {
+    var buttons = progressTrack.querySelectorAll("button");
+    buttons.forEach(function (btn, idx) {
+      var stepNum = idx + 1;
+      btn.classList.toggle("completed", !!completed[stepNum] && stepNum !== currentStep);
+      if (stepNum === currentStep) {
+        btn.setAttribute("aria-current", "step");
+      } else {
+        btn.removeAttribute("aria-current");
+      }
+    });
+    progressLabel.textContent = "Step " + currentStep + " of " + totalSteps;
+  }
+
+  function goToStep(n) {
+    if (n < 1 || n > totalSteps) return;
+    completed[currentStep] = true;
+    steps.forEach(function (panel) {
+      var panelStep = parseInt(panel.dataset.step, 10);
+      panel.hidden = panelStep !== n;
+    });
+    currentStep = n;
+    updateProgressNav();
+    var activePanel = steps[n - 1];
+    var heading = activePanel.querySelector("h2");
+    if (heading) {
+      heading.setAttribute("tabindex", "-1");
+      heading.focus();
+    }
+  }
+
+  document.querySelectorAll(".next-btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      goToStep(currentStep + 1);
+    });
+  });
+
+  document.querySelectorAll(".prev-btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      goToStep(currentStep - 1);
+    });
+  });
+
+  var restartBtn = document.getElementById("restartBtn");
+  if (restartBtn) {
+    restartBtn.addEventListener("click", function () {
+      completed = {};
+      goToStep(1);
+    });
+  }
+
+  buildProgressNav();
+  goToStep(1);
+
+  // Multiple-choice checking
+  document.querySelectorAll(".check-btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var qName = btn.dataset.question;
+      var fbId = btn.dataset.fb;
+      var fb = document.getElementById(fbId);
+      var selected = document.querySelector('input[name="' + qName + '"]:checked');
+
+      if (!selected) {
+        fb.textContent = "Please choose an answer before checking.";
+        fb.className = "feedback show incorrect";
+        return;
+      }
+
+      if (selected.value === "correct") {
+        fb.textContent = "Correct! Nice work.";
+        fb.className = "feedback show correct";
+      } else {
+        fb.textContent = "Not quite. Review the example above and try again.";
+        fb.className = "feedback show incorrect";
+      }
+    });
+  });
+
+  // Practice input checking
+  var practiceInput = document.getElementById("practiceInput");
+  var checkPractice = document.getElementById("checkPractice");
+  var practiceFb = document.getElementById("practice-fb");
+  var hintBtn = document.getElementById("hintBtn");
+  var hintFb = document.getElementById("hint-fb");
+  var correctAnswer = "ff02::1";
+
+  checkPractice.addEventListener("click", function () {
+    var val = practiceInput.value.trim().toLowerCase();
+    if (val === "") {
+      practiceFb.textContent = "Type an answer in the box first.";
+      practiceFb.className = "feedback show incorrect";
+      return;
+    }
+    if (val === correctAnswer) {
+      practiceFb.textContent = "Correct! ff02:0000:0000:0000:0000:0000:0000:0001 compresses to ff02::1.";
+      practiceFb.className = "feedback show correct";
+    } else {
+      practiceFb.textContent = "Not quite yet. Check: did you drop leading zeros, and replace only the longest run of zero groups with ::?";
+      practiceFb.className = "feedback show incorrect";
+    }
+  });
+
+  hintBtn.addEventListener("click", function () {
+    hintFb.textContent = "Hint: Groups 2 through 7 are all zero. That is one long run.";
+    hintFb.classList.add("show");
+  });
+
+  // Dyslexia-friendly font toggle
+  var fontToggle = document.getElementById("fontToggle");
+  fontToggle.addEventListener("click", function () {
+    var pressed = fontToggle.getAttribute("aria-pressed") === "true";
+    var newState = !pressed;
+    fontToggle.setAttribute("aria-pressed", String(newState));
+    document.body.classList.toggle("dyslexic-font", newState);
+    fontToggle.textContent = "Dyslexia-friendly font: " + (newState ? "On" : "Off");
+  });
+})();
+</script>
+
+</body>
+</html>
