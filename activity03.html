@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Microeconomics Prompt Builder</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --border: #cbd5e1;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); padding: 20px; line-height: 1.5; }
+    .container { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 768px) { .container { grid-template-columns: 1fr; } }
+    
+    .panel { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+    h2 { margin-bottom: 15px; font-size: 1.25rem; color: #1e293b; border-bottom: 2px solid var(--border); padding-bottom: 8px; }
+    
+    .form-group { margin-bottom: 15px; }
+    label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 0.875rem; }
+    input[type="text"], select, textarea { width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.9rem; }
+    textarea { resize: vertical; min-height: 70px; }
+    
+    .checkbox-group { display: flex; align-items: center; gap: 8px; font-weight: 600; cursor: pointer; }
+    .checkbox-group input { width: 18px; height: 18px; }
+    
+    .output-box { width: 100%; height: 350px; background: #0f172a; color: #f8fafc; font-family: monospace; font-size: 0.85rem; padding: 12px; border-radius: 6px; overflow-y: auto; white-space: pre-wrap; margin-bottom: 12px; }
+    
+    button { background: var(--primary); color: white; border: none; padding: 10px 18px; font-weight: 600; border-radius: 6px; cursor: pointer; width: 100%; transition: background 0.2s; }
+    button:hover { background: var(--primary-dark); }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Input Form -->
+  <div class="panel">
+    <h2>Microeconomics Configuration</h2>
+    
+    <div class="form-group">
+      <label for="topic">Lesson Topic</label>
+      <input type="text" id="topic" value="Supply and Demand Elasticity">
+    </div>
+
+    <div class="form-group">
+      <label for="persona">Expert Persona / Role</label>
+      <select id="persona">
+        <option value="Economics Subject Matter Expert (SME)">Economics SME</option>
+        <option value="Instructional Designer">Instructional Designer</option>
+        <option value="Web Developer">Web Developer (Educational Tech)</option>
+        <option value="ADA & Accessibility Expert">ADA Expert</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="activity">Activity Type (12 Standard Formats)</label>
+      <select id="activity">
+        <option value="Case Study Analysis">1. Case Study Analysis</option>
+        <option value="Interactive Simulation / Roleplay">2. Interactive Simulation / Roleplay</option>
+        <option value="Graph Interpretation & Sketching">3. Graph Interpretation & Sketching</option>
+        <option value="Data-Driven Problem Set">4. Data-Driven Problem Set</option>
+        <option value="Debate / Socratic Discussion Starter">5. Debate / Socratic Discussion Starter</option>
+        <option value="Concept Map / Mind Map Blueprint">6. Concept Map / Mind Map Blueprint</option>
+        <option value="Peer Review & Critique Guide">7. Peer Review & Critique Guide</option>
+        <option value="Real-World Application Journal">8. Real-World Application Journal</option>
+        <option value="Multiple-Choice / Misconception Diagnostic">9. Multiple-Choice Diagnostic</option>
+        <option value="Infographic Design Brief">10. Infographic Design Brief</option>
+        <option value="Classroom Experiment">11. Interactive Game / Experiment</option>
+        <option value="Micro-Lecture Reflection & Quiz">12. Micro-Lecture Reflection</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="objectives">Learning Objectives</label>
+      <textarea id="objectives">Calculate price elasticity of demand and interpret its impact on total revenue.</textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="concepts">Major Concepts Included</label>
+      <textarea id="concepts">Price Elasticity of Demand (PED), Elastic vs. Inelastic, Total Revenue Test, Cross-Price Elasticity.</textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="checkbox-group">
+        <input type="checkbox" id="ada" checked>
+        Enforce ADA / Universal Design Guidelines
+      </label>
+    </div>
+  </div>
+
+  <!-- Prompt Output -->
+  <div class="panel">
+    <h2>Target Generated Prompt</h2>
+    <div class="output-box" id="promptOutput"></div>
+    <button onclick="copyPrompt()">Copy Generated Prompt</button>
+  </div>
+</div>
+
+<script>
+  function updatePrompt() {
+    const topic = document.getElementById('topic').value;
+    const persona = document.getElementById('persona').value;
+    const activity = document.getElementById('activity').value;
+    const objectives = document.getElementById('objectives').value;
+    const concepts = document.getElementById('concepts').value;
+    const isADA = document.getElementById('ada').checked;
+
+    let promptText = `Act as an expert ${persona} crafting learning materials for a Community College Microeconomics course.\n\n`;
+    promptText += `### Context & Parameters\n`;
+    promptText += `- Topic: ${topic}\n`;
+    promptText += `- Activity Format: ${activity}\n`;
+    promptText += `- Key Concepts: ${concepts}\n`;
+    promptText += `- Target Audience: Community College Students (varied academic background, non-traditional learners)\n\n`;
+    
+    promptText += `### Learning Objectives\n${objectives}\n\n`;
+    
+    promptText += `### Activity Requirements\n`;
+    promptText += `Develop a complete, turn-key "${activity}" tailored for community college students.\n`;
+    promptText += `- Ensure tone is encouraging, accessible, and grounded in practical real-world scenarios.\n`;
+    promptText += `- Break complex mathematical or graph concepts into bite-sized steps.\n`;
+    promptText += `- Include explicit student instructions, grading rubrics/criteria, and an answer key/teacher guide.\n\n`;
+
+    if (isADA) {
+      promptText += `### Accessibility & ADA Directives (WCAG 2.1 Standards)\n`;
+      promptText += `- Visuals: Provide full text descriptions (Alt text equivalents) for all graphs, tables, or visual cues.\n`;
+      promptText += `- Formatting: Use strong heading hierarchies (H2, H3), bulleted lists, and avoid relying solely on color-coding to convey economic states (e.g., green for profit, red for loss).\n`;
+      promptText += `- Readability: Plain language instructions, clear structure for screen readers, and clear data-table formatting.\n\n`;
+    }
+
+    promptText += `Please generate the full activity now.`;
+
+    document.getElementById('promptOutput').innerText = promptText;
+  }
+
+  function copyPrompt() {
+    const text = document.getElementById('promptOutput').innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      alert("Prompt copied to clipboard!");
+    });
+  }
+
+  document.querySelectorAll('input, select, textarea').forEach(element => {
+    element.addEventListener('input', updatePrompt);
+  });
+
+  // Initial render
+  updatePrompt();
+</script>
+
+</body>
+</html>
